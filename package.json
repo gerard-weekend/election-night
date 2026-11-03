@@ -1,0 +1,12 @@
+{
+  "name": "election-night",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Live election-night TV slideshow for the 2026 US midterms",
+  "scripts": {
+    "serve": "python3 -m http.server 8000",
+    "smoke": "node tools/smoke.mjs 50",
+    "test": "node tools/test-calls.mjs"
+  }
+}

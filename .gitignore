@@ -4,3 +4,5 @@ node_modules/
 
 # Recorded feed snapshots from the night (tools/record.mjs) — can get large
 data/replay/
+
+# Smoke-test screenshots land in /tmp, not here

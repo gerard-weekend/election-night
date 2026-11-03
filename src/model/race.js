@@ -50,6 +50,19 @@ export function chooseVotes (race) {
   return { reading: null, from: null }
 }
 
+// Before any votes are counted every candidate sits at zero, so sorting by
+// votes alone leaves raw ballot order — which put a write-in opposite Sherrod
+// Brown and the Legal Marijuana candidate opposite Pete Ricketts. Major
+// parties rank first, then each feed's own ordering (NYT's `order`, civicAPI's
+// ballot sequence). Once real votes arrive they dominate, as they should.
+const PARTY_RANK = { D: 0, R: 0, I: 1, O: 2 }
+
+export function rankCandidates (a, b) {
+  return (b.votes - a.votes)
+    || ((PARTY_RANK[a.party] ?? 0) - (PARTY_RANK[b.party] ?? 0))
+    || ((a.order ?? 99) - (b.order ?? 99))
+}
+
 export function leaderOf (candidates) {
   let best = null
   for (const c of candidates) {
@@ -68,12 +81,13 @@ export function twoPartyShare (candidates) {
 // A ballot measure's standing. "passing"/"failing" is a lead; PASSES/FAILS is
 // only ever a call — the design brief is explicit that a leader is not a winner.
 export function propStatus (race) {
+  // A call outranks the vote test. Checking the total first made a called
+  // measure read "none" whenever votes had not arrived yet.
+  if (race.call) return race.call.winner === 'yes' ? 'passes' : 'fails'
   const yes = race.candidates.find(c => c.id === 'yes')
   const no = race.candidates.find(c => c.id === 'no')
   if (!yes || !no || yes.votes + no.votes === 0) return 'none'
-  const share = pct(yes.votes, yes.votes + no.votes)
-  if (race.call) return race.call.winner === 'yes' ? 'passes' : 'fails'
-  return share > 50 ? 'passing' : 'failing'
+  return pct(yes.votes, yes.votes + no.votes) > 50 ? 'passing' : 'failing'
 }
 
 // The four visual states the design brief defines.
@@ -97,7 +111,8 @@ export function resolve (race) {
       votes: num(c.votes),
       pct: pct(num(c.votes), total),
       incumbent: !!c.incumbent,
-    })).sort((a, b) => b.votes - a.votes)
+      order: c.order,
+    })).sort(rankCandidates)
     race.pctIn = num(reading.pctIn)
     race.votesFrom = from
     race.updatedAt = reading.at || nowMs()

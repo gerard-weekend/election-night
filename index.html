@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Election Night 2026</title>
+<link rel="icon" href="data:,">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!--
+  The TV page. One fixed 1920x1080 stage, scaled and letterboxed to the screen.
+
+  Styling here is deliberately plain placeholder work: structure, hierarchy and
+  the four race states, nothing more. Every value sits behind a data-field hook
+  and every repeated row behind data-template, so the designer's HTML and CSS
+  can replace this without touching src/.
+-->
+<link rel="stylesheet" href="assets/placeholder.css">
+</head>
+<body>
+  <div id="stage">
+    <div id="views"></div>
+    <div id="rotation"></div>
+    <div id="ticker"></div>
+  </div>
+  <noscript>This display needs JavaScript.</noscript>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

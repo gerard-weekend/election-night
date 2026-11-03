@@ -34,7 +34,11 @@ async function getJson (url) {
 // One civicAPI candidate list -> our reading shape. `kind` decides whether the
 // entries are partisan candidates or a measure's Yes/No pair.
 function toCandidates (list, kind) {
-  return (list || []).map(c => {
+  return (list || [])
+    // DATA-PLAN.md: ignore write-ins. Ohio lists three, and with every vote at
+    // zero they would otherwise outrank the actual Republican nominee.
+    .filter(c => !/write[- ]?in/i.test(String(c.party || '')))
+    .map((c, i) => {
     const name = String(c.name || '').trim()
     const isProp = kind === 'prop' || /^(yes|no)$/i.test(name)
     return {
@@ -44,6 +48,7 @@ function toCandidates (list, kind) {
       votes: num(c.votes),
       incumbent: !!c.incumbent,
       winner: !!c.winner,
+      order: i + 1,
     }
   })
 }

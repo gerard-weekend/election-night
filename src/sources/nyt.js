@@ -53,6 +53,8 @@ function unitCandidates (race, unit) {
       party: isProp ? null : partyBucket(m.party && m.party.nyt_id),
       votes: num(c.votes && c.votes.total),
       incumbent: !!m.incumbent,
+      // NYT ranks the serious contenders 1, 2, ... and omits write-ins.
+      order: m.order ?? m.ballot_order,
     }
   })
 }

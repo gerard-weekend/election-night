@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Control · Election Night 2026</title>
+<link rel="icon" href="data:,">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!--
+  The operator window. Open this on the laptop screen while the TV shows
+  index.html. It fetches nothing: the TV page owns the data and sends a
+  snapshot over a BroadcastChannel; this sends commands back.
+
+  Both pages must be served from the same origin for the channel to connect.
+-->
+<style>
+  :root { color-scheme: dark; --ok:#3ba55d; --warn:#e3a50a; --bad:#d7262e; --dem:#1560d4; --rep:#d7262e; --ind:#7c4dbe; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#13161c; color:#e9edf5; font:14px/1.45 ui-sans-serif,system-ui,sans-serif; padding:16px; }
+  h1 { font-size:15px; letter-spacing:.14em; text-transform:uppercase; margin:0 0 14px; color:#9aa6bd; }
+  h2 { font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:#9aa6bd; margin:18px 0 8px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; }
+  .panel { background:#1b1f28; border:1px solid #2a3040; border-radius:8px; padding:12px 14px; }
+  button { background:#2a3040; color:#e9edf5; border:1px solid #3a4254; border-radius:6px; padding:7px 12px; font:inherit; cursor:pointer; }
+  button:hover { background:#333c50; }
+  button[data-on="1"] { background:var(--warn); color:#111; border-color:var(--warn); }
+  .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .feed { display:flex; justify-content:space-between; gap:10px; padding:5px 0; border-bottom:1px solid #242a36; font-variant-numeric:tabular-nums; }
+  .feed:last-child { border-bottom:0; }
+  .dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; vertical-align:middle; }
+  .dot.ok { background:var(--ok); } .dot.bad { background:var(--bad); } .dot.warn { background:var(--warn); }
+  .muted { color:#8b96ab; }
+  input[type=text] { background:#10131a; border:1px solid #3a4254; color:#e9edf5; border-radius:6px; padding:8px 10px; font:inherit; width:100%; }
+  .calls { max-height:260px; overflow:auto; }
+  .call { padding:4px 0; border-bottom:1px solid #242a36; display:flex; gap:8px; justify-content:space-between; }
+  .p-D { color:#6ea8ff; } .p-R { color:#ff8a8a; } .p-I { color:#c3a0ff; }
+  .gain { color:var(--warn); font-weight:700; font-size:11px; }
+  .warnbox { background:#3a2e12; border:1px solid var(--warn); color:#ffd97a; border-radius:6px; padding:8px 10px; margin-bottom:12px; }
+  code { background:#10131a; padding:1px 5px; border-radius:4px; }
+  .disconnected { background:#3a1416; border-color:var(--bad); color:#ffb4b4; }
+</style>
+</head>
+<body>
+  <h1>Election night · control</h1>
+  <div id="link" class="warnbox disconnected">Waiting for the TV page… open <code>index.html</code> in another window.</div>
+
+  <div class="grid">
+    <div>
+      <div class="panel">
+        <h2 style="margin-top:0">Rotation</h2>
+        <div class="row">
+          <button id="pause">Pause</button>
+          <button id="prev">← Prev</button>
+          <button id="next">Next →</button>
+          <button id="unpin">Unpin</button>
+        </div>
+        <div class="row" style="margin-top:10px" id="pins"></div>
+        <div class="muted" id="rotstate" style="margin-top:10px"></div>
+      </div>
+
+      <div class="panel" style="margin-top:18px">
+        <h2 style="margin-top:0">Feed health</h2>
+        <div id="feeds"></div>
+        <div class="row" style="margin-top:12px">
+          <button id="clear">Clear stale cache</button>
+          <button id="reload">Reload TV</button>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:18px">
+        <h2 style="margin-top:0">Manual call</h2>
+        <p class="muted" style="margin:0 0 8px">
+          <code>SEN-ME D</code> · <code>CA-PROP-40 YES</code> · <code>HOUSE-PA-07 R</code><br>
+          Prefix with <code>-</code> to withdraw: <code>-SEN-ME</code>
+        </p>
+        <input type="text" id="manual" placeholder="Type a call and press Enter" autocomplete="off">
+        <div id="manualmsg" class="muted" style="margin-top:8px"></div>
+        <div id="manuallist" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h2 style="margin-top:0">Latest calls</h2>
+        <div class="calls" id="calls"></div>
+      </div>
+
+      <div class="panel" style="margin-top:18px">
+        <h2 style="margin-top:0">Coverage</h2>
+        <div id="counts"></div>
+        <h2>Single-sourced races</h2>
+        <div class="muted" id="single"></div>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+import { makeBus, MSG } from './src/shell/bus.js'
+
+const bus = makeBus('control')
+const $ = id => document.getElementById(id)
+const send = (action, value) => bus.send(MSG.COMMAND, { action, value })
+
+let lastSeen = 0
+let state = null
+
+bus.on(msg => { if (msg.type === MSG.STATE) { state = msg.payload; lastSeen = Date.now(); render() } })
+bus.send(MSG.HELLO, {})
+setInterval(() => bus.send(MSG.HELLO, {}), 4000)
+
+// The link indicator has to be honest: a stale snapshot is not a live one.
+setInterval(() => {
+  const live = Date.now() - lastSeen < 6000
+  $('link').classList.toggle('disconnected', !live)
+  if (!live) $('link').textContent = 'Not connected to the TV page. Is index.html open on the same origin?'
+}, 1000)
+
+$('pause').onclick = () => send('pause', !(state && state.rotation.paused))
+$('next').onclick = () => send('next')
+$('prev').onclick = () => send('prev')
+$('unpin').onclick = () => send('unpin')
+$('clear').onclick = () => { if (confirm('Clear saved races and manual calls, then reload the TV?')) send('clear-cache') }
+$('reload').onclick = () => send('reload')
+
+$('manual').addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return
+  const raw = e.target.value.trim()
+  if (!raw) return
+  const msg = applyManual(raw)
+  $('manualmsg').textContent = msg
+  e.target.value = ''
+})
+
+function applyManual (raw) {
+  if (raw.startsWith('-')) {
+    const key = raw.slice(1).trim().toUpperCase()
+    send('manual', { key, call: null })
+    return `Withdrew manual call on ${key}.`
+  }
+  const m = raw.toUpperCase().match(/^(\S+)\s+(\S+)$/)
+  if (!m) return 'Could not read that. Try: SEN-ME D'
+  const [, key, who] = m
+  let call
+  if (who === 'YES' || who === 'NO') call = { winner: who.toLowerCase(), at: Date.now() }
+  else if (['D', 'R', 'I', 'O'].includes(who)) call = { party: who, at: Date.now() }
+  else call = { name: who, at: Date.now() }      // a surname also works
+  send('manual', { key, call })
+  return `Called ${key} for ${who}.`
+}
+
+function render () {
+  if (!state) return
+  $('link').textContent = `Connected · ${state.testData ? 'TEST DATA ON AIR' : 'live data'}`
+  $('link').classList.toggle('disconnected', false)
+
+  // rotation
+  $('pause').textContent = state.rotation.paused ? '▶ Resume' : '❚❚ Pause'
+  $('pause').dataset.on = state.rotation.paused ? '1' : ''
+  $('pins').innerHTML = state.views.map(v =>
+    `<button data-pin="${v.id}" data-on="${state.rotation.pinned === v.id ? '1' : ''}">${v.title}</button>`).join('')
+  for (const b of $('pins').querySelectorAll('[data-pin]')) b.onclick = () => send('pin', b.dataset.pin)
+  $('rotstate').textContent =
+    `On screen: ${state.rotation.current || '—'}${state.rotation.pinned ? ' (pinned)' : ''} · ` +
+    `${Math.ceil(state.rotation.remaining / 1000)}s left`
+
+  // feeds
+  $('feeds').innerHTML = Object.entries(state.health).map(([name, h]) => {
+    const age = h.lastOk ? Math.round((Date.now() - h.lastOk) / 1000) : null
+    const cls = !h.ok ? 'bad' : age != null && age > 180 ? 'warn' : 'ok'
+    return `<div class="feed">
+      <span><span class="dot ${cls}"></span>${name}</span>
+      <span class="muted">${h.error ? h.error : age == null ? 'never' : age + 's ago'}${h.test ? ' · TEST' : ''}</span>
+    </div>`
+  }).join('') || '<div class="muted">No feeds reporting yet.</div>'
+
+  // calls
+  $('calls').innerHTML = state.calls.length ? state.calls.map(c => `
+    <div class="call">
+      <span><b>${c.label}</b> <span class="p-${c.party || 'O'}">${c.name || c.key}</span>
+        ${c.flipped ? '<span class="gain">GAIN</span>' : ''}</span>
+      <span class="muted">${c.source} · ${new Date(c.at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>
+    </div>`).join('') : '<div class="muted">No calls yet.</div>'
+
+  // coverage
+  $('counts').innerHTML = `
+    <div class="feed"><span>House</span><span class="muted">${state.counts.house} / 435</span></div>
+    <div class="feed"><span>Senate</span><span class="muted">${state.counts.senate} / 35</span></div>
+    <div class="feed"><span>California</span><span class="muted">${state.counts.ca} / 11</span></div>`
+  $('single').textContent = state.singleSourced.length
+    ? state.singleSourced.join(', ') + ' — one feed only, no cross-check'
+    : 'none'
+
+  const man = Object.keys(state.manual || {})
+  $('manuallist').innerHTML = man.length
+    ? '<span class="muted">Manual calls in force: </span>' + man.join(', ')
+    : ''
+}
+</script>
+</body>
+</html>

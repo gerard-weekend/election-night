@@ -1,0 +1,436 @@
+State,District,Label,2024_notionalwinner,2024_notional_Dem_share,2026_S_needed
+California,4,CA-04,D,0.575,-1
+California,7,CA-07,D,0.578,-1
+California,11,CA-11,D,0.81,-1
+California,12,CA-12,D,1,-1
+California,14,CA-14,D,0.668,-1
+California,29,CA-29,D,0.688,-1
+California,34,CA-34,D,1,-1
+California,37,CA-37,D,1,-1
+Florida,10,FL-10,D,0.624,-1
+Louisiana,2,LA-02,D,0.789,-1
+Massachusetts,1,MA-01,D,1,-1
+Massachusetts,2,MA-02,D,1,-1
+Massachusetts,5,MA-05,D,1,-1
+Massachusetts,7,MA-07,D,1,-1
+New Jersey,8,NJ-08,D,0.631,-1
+Pennsylvania,3,PA-03,D,1,-1
+Wisconsin,2,WI-02,D,0.701,-1
+Texas,20,TX-20,D,1.04,-0.54
+Massachusetts,3,MA-03,D,1,-0.5
+Massachusetts,4,MA-04,D,1,-0.5
+Massachusetts,6,MA-06,D,1,-0.5
+Texas,30,TX-30,D,1,-0.5
+Washington,9,WA-09,D,1,-0.5
+California,16,CA-16,D,0.99,-0.49
+Florida,20,FL-20,D,0.98,-0.48
+Maryland,4,MD-04,D,0.887,-0.387
+Georgia,5,GA-05,D,0.857,-0.357
+New York,10,NY-10,D,0.846,-0.346
+Washington,7,WA-07,D,0.842,-0.342
+New York,13,NY-13,D,0.835,-0.335
+Illinois,7,IL-07,D,0.833,-0.333
+Maryland,7,MD-07,D,0.824,-0.324
+Missouri,1,MO-01,D,0.805,-0.305
+New York,12,NY-12,D,0.805,-0.305
+Ohio,11,OH-11,D,0.8,-0.3
+Texas,37,TX-37,D,0.799,-0.299
+Maryland,8,MD-08,D,0.79,-0.29
+New York,15,NY-15,D,0.784,-0.284
+New York,7,NY-07,D,0.781,-0.281
+Colorado,1,CO-01,D,0.78,-0.28
+Texas,18,TX-18,D,0.774,-0.274
+New Jersey,10,NJ-10,D,0.77,-0.27
+Wisconsin,4,WI-04,D,0.769,-0.269
+Georgia,4,GA-04,D,0.756,-0.256
+New York,8,NY-08,D,0.754,-0.254
+Minnesota,5,MN-05,D,0.752,-0.252
+California,43,CA-43,D,0.751,-0.251
+New York,5,NY-05,D,0.748,-0.248
+Georgia,6,GA-06,D,0.747,-0.247
+Virginia,8,VA-08,D,0.744,-0.244
+New York,9,NY-09,D,0.743,-0.243
+North Carolina,12,NC-12,D,0.74,-0.24
+Michigan,13,MI-13,D,0.737,-0.237
+North Carolina,4,NC-04,D,0.733,-0.233
+Michigan,12,MI-12,D,0.733,-0.233
+California,15,CA-15,D,0.731,-0.231
+Oregon,3,OR-03,D,0.729,-0.229
+Arizona,3,AZ-03,D,0.727,-0.227
+California,44,CA-44,D,0.724,-0.224
+Florida,24,FL-24,D,0.722,-0.222
+Hawaii,1,HI-01,D,0.718,-0.218
+Georgia,13,GA-13,D,0.718,-0.218
+New York,16,NY-16,D,0.716,-0.216
+Pennsylvania,2,PA-02,D,0.715,-0.215
+Illinois,4,IL-04,D,0.712,-0.212
+Oregon,1,OR-01,D,0.709,-0.209
+Ohio,3,OH-03,D,0.707,-0.207
+Massachusetts,8,MA-08,D,0.706,-0.206
+Texas,29,TX-29,D,0.703,-0.203
+Colorado,2,CO-02,D,0.703,-0.203
+Indiana,7,IN-07,D,0.702,-0.202
+Virginia,3,VA-03,D,0.701,-0.201
+California,19,CA-19,D,0.693,-0.193
+New York,14,NY-14,D,0.692,-0.192
+Illinois,5,IL-05,D,0.69,-0.19
+California,8,CA-08,D,0.69,-0.19
+Hawaii,2,HI-02,D,0.688,-0.188
+California,36,CA-36,D,0.687,-0.187
+Illinois,9,IL-09,D,0.684,-0.184
+Maryland,5,MD-05,D,0.679,-0.179
+Texas,33,TX-33,D,0.678,-0.178
+North Carolina,2,NC-02,D,0.677,-0.177
+California,17,CA-17,D,0.677,-0.177
+Vermont,AL,VT-AL,D,0.676,-0.176
+Illinois,2,IL-02,D,0.676,-0.176
+Virginia,4,VA-04,D,0.675,-0.175
+California,30,CA-30,D,0.674,-0.174
+Minnesota,4,MN-04,D,0.674,-0.174
+Illinois,3,IL-03,D,0.673,-0.173
+Texas,9,TX-09,D,0.67,-0.17
+Virginia,11,VA-11,D,0.67,-0.17
+California,10,CA-10,D,0.665,-0.165
+Rhode Island,1,RI-01,D,0.663,-0.163
+Illinois,1,IL-01,D,0.659,-0.159
+Pennsylvania,5,PA-05,D,0.653,-0.153
+New York,26,NY-26,D,0.652,-0.152
+California,52,CA-52,D,0.643,-0.143
+Washington,2,WA-02,D,0.64,-0.14
+California,28,CA-28,D,0.639,-0.139
+Michigan,6,MI-06,D,0.639,-0.139
+California,18,CA-18,D,0.636,-0.136
+Arizona,7,AZ-07,D,0.634,-0.134
+Connecticut,1,CT-01,D,0.632,-0.132
+California,32,CA-32,D,0.632,-0.132
+Washington,1,WA-01,D,0.632,-0.132
+California,24,CA-24,D,0.627,-0.127
+New Jersey,12,NJ-12,D,0.627,-0.127
+California,46,CA-46,D,0.624,-0.124
+Texas,7,TX-07,D,0.623,-0.123
+Connecticut,4,CT-04,D,0.621,-0.121
+Mississippi,2,MS-02,D,0.62,-0.12
+Kentucky,3,KY-03,D,0.62,-0.12
+South Carolina,6,SC-06,D,0.618,-0.118
+Maine,1,ME-01,D,0.617,-0.117
+New York,6,NY-06,D,0.617,-0.117
+New York,20,NY-20,D,0.611,-0.111
+Maryland,3,MD-03,D,0.61,-0.11
+California,2,CA-02,D,0.609,-0.109
+New York,25,NY-25,D,0.608,-0.108
+Alabama,7,AL-07,D,0.607,-0.107
+Colorado,6,CO-06,D,0.605,-0.105
+Illinois,10,IL-10,D,0.6,-0.1
+Connecticut,3,CT-03,D,0.598,-0.098
+Texas,16,TX-16,D,0.595,-0.095
+Maryland,2,MD-02,D,0.595,-0.095
+Michigan,11,MI-11,D,0.595,-0.095
+Florida,23,FL-23,D,0.594,-0.094
+California,41,CA-41,D,0.593,-0.093
+New Jersey,1,NJ-01,D,0.591,-0.091
+Pennsylvania,4,PA-04,D,0.591,-0.091
+California,33,CA-33,D,0.588,-0.088
+California,9,CA-09,D,0.588,-0.088
+Washington,10,WA-10,D,0.587,-0.087
+Minnesota,3,MN-03,D,0.585,-0.085
+Rhode Island,2,RI-02,D,0.584,-0.084
+California,50,CA-50,D,0.583,-0.083
+New Jersey,6,NJ-06,D,0.582,-0.082
+California,42,CA-42,D,0.581,-0.081
+Illinois,13,IL-13,D,0.581,-0.081
+Connecticut,2,CT-02,D,0.58,-0.08
+Delaware,AL,DE-AL,D,0.579,-0.079
+California,38,CA-38,D,0.578,-0.078
+California,31,CA-31,D,0.577,-0.077
+California,51,CA-51,D,0.577,-0.077
+New Jersey,11,NJ-11,D,0.575,-0.075
+Colorado,7,CO-07,D,0.574,-0.074
+California,25,CA-25,D,0.573,-0.073
+New York,18,NY-18,D,0.572,-0.072
+Illinois,8,IL-08,D,0.571,-0.071
+California,26,CA-26,D,0.571,-0.071
+Minnesota,2,MN-02,D,0.569,-0.069
+Washington,6,WA-06,D,0.568,-0.068
+California,39,CA-39,D,0.567,-0.067
+Massachusetts,9,MA-09,D,0.565,-0.065
+Pennsylvania,12,PA-12,D,0.564,-0.064
+California,35,CA-35,D,0.564,-0.064
+New Mexico,1,NM-01,D,0.564,-0.064
+Georgia,2,GA-02,D,0.563,-0.063
+New Mexico,3,NM-03,D,0.563,-0.063
+Pennsylvania,6,PA-06,D,0.562,-0.062
+New Jersey,5,NJ-05,D,0.558,-0.058
+Utah,1,UT-01,D,0.557,-0.057
+Kansas,3,KS-03,D,0.556,-0.056
+Illinois,11,IL-11,D,0.556,-0.056
+California,49,CA-49,D,0.552,-0.052
+Illinois,14,IL-14,D,0.551,-0.051
+Michigan,3,MI-03,D,0.551,-0.051
+California,6,CA-06,D,0.546,-0.046
+New York,22,NY-22,D,0.546,-0.046
+California,47,CA-47,D,0.544,-0.044
+Illinois,17,IL-17,D,0.544,-0.044
+New Jersey,3,NJ-03,D,0.544,-0.044
+California,27,CA-27,D,0.543,-0.043
+Indiana,1,IN-01,D,0.543,-0.043
+Illinois,6,IL-06,D,0.542,-0.042
+Nevada,4,NV-04,D,0.542,-0.042
+Washington,8,WA-08,D,0.541,-0.041
+Oregon,4,OR-04,D,0.541,-0.041
+New Hampshire,1,NH-01,D,0.54,-0.04
+Nevada,1,NV-01,D,0.539,-0.039
+Pennsylvania,17,PA-17,D,0.539,-0.039
+Arizona,4,AZ-04,D,0.537,-0.037
+California,1,CA-01,D,0.537,-0.037
+California,21,CA-21,D,0.536,-0.036
+Michigan,8,MI-08,D,0.535,-0.035
+Oregon,6,OR-06,D,0.534,-0.034
+Maryland,6,MD-06,D,0.532,-0.032
+Ohio,13,OH-13,D,0.531,-0.031
+California,13,CA-13,D,0.53,-0.03
+New Hampshire,2,NH-02,D,0.53,-0.03
+California,3,CA-03,D,0.525,-0.025
+New Jersey,9,NJ-09,D,0.525,-0.025
+Virginia,10,VA-10,D,0.523,-0.023
+Connecticut,5,CT-05,D,0.521,-0.021
+California,45,CA-45,D,0.521,-0.021
+New Mexico,2,NM-02,D,0.521,-0.021
+Washington,3,WA-03,D,0.519,-0.019
+Texas,28,TX-28,D,0.518,-0.018
+New York,3,NY-03,D,0.518,-0.018
+Oregon,5,OR-05,D,0.515,-0.015
+Nevada,3,NV-03,D,0.514,-0.014
+Virginia,7,VA-07,D,0.513,-0.013
+New York,4,NY-04,D,0.511,-0.011
+New York,19,NY-19,D,0.511,-0.011
+Ohio,1,OH-01,D,0.506,-0.006
+Maine,2,ME-02,D,0.503,-0.003
+Iowa,1,IA-01,R,0.499,0.001
+California,48,CA-48,R,0.497,0.003
+Colorado,8,CO-08,R,0.496,0.004
+Pennsylvania,7,PA-07,R,0.495,0.005
+Alaska,AL,AK-AL,R,0.495,0.005
+Pennsylvania,10,PA-10,R,0.494,0.006
+Pennsylvania,8,PA-08,R,0.492,0.008
+Nebraska,2,NE-02,R,0.491,0.009
+Florida,14,FL-14,R,0.488,0.012
+Arizona,6,AZ-06,R,0.487,0.013
+Wisconsin,3,WI-03,R,0.486,0.014
+California,22,CA-22,R,0.486,0.014
+Ohio,9,OH-09,R,0.483,0.017
+Texas,34,TX-34,R,0.483,0.017
+Arizona,1,AZ-01,R,0.481,0.019
+Iowa,3,IA-03,R,0.481,0.019
+Michigan,7,MI-07,R,0.481,0.019
+Virginia,2,VA-02,R,0.48,0.02
+Colorado,3,CO-03,R,0.474,0.026
+New Jersey,7,NJ-07,R,0.472,0.028
+Florida,22,FL-22,R,0.47,0.03
+North Carolina,1,NC-01,R,0.469,0.031
+Michigan,10,MI-10,R,0.468,0.032
+New York,17,NY-17,R,0.468,0.032
+Florida,25,FL-25,R,0.465,0.035
+Montana,1,MT-01,R,0.46,0.04
+Arizona,2,AZ-02,R,0.455,0.045
+Wisconsin,1,WI-01,R,0.448,0.052
+New York,1,NY-01,R,0.448,0.052
+Florida,9,FL-09,R,0.444,0.056
+Texas,35,TX-35,R,0.444,0.056
+Florida,13,FL-13,R,0.442,0.058
+Michigan,4,MI-04,R,0.441,0.059
+North Carolina,3,NC-03,R,0.44,0.06
+Colorado,4,CO-04,R,0.439,0.061
+Virginia,1,VA-01,R,0.436,0.064
+Pennsylvania,1,PA-01,R,0.436,0.064
+Arizona,8,AZ-08,R,0.435,0.065
+Florida,7,FL-07,R,0.435,0.065
+North Carolina,11,NC-11,R,0.432,0.068
+Nevada,2,NV-02,R,0.43,0.07
+Texas,15,TX-15,R,0.429,0.071
+Colorado,5,CO-05,R,0.428,0.072
+Florida,4,FL-04,R,0.427,0.073
+Wisconsin,8,WI-08,R,0.427,0.073
+Alabama,2,AL-02,R,0.426,0.074
+Ohio,15,OH-15,R,0.425,0.075
+Virginia,5,VA-05,R,0.425,0.075
+Iowa,2,IA-02,R,0.421,0.079
+Minnesota,8,MN-08,R,0.42,0.08
+North Carolina,14,NC-14,R,0.419,0.081
+Missouri,2,MO-02,R,0.418,0.082
+South Carolina,1,SC-01,R,0.417,0.083
+Tennessee,9,TN-09,R,0.415,0.085
+Florida,16,FL-16,R,0.415,0.085
+New Jersey,2,NJ-02,R,0.415,0.085
+Minnesota,1,MN-01,R,0.414,0.086
+Ohio,7,OH-07,R,0.414,0.086
+North Carolina,7,NC-07,R,0.414,0.086
+North Carolina,13,NC-13,R,0.414,0.086
+Missouri,5,MO-05,R,0.413,0.087
+Ohio,8,OH-08,R,0.412,0.088
+Arkansas,2,AR-02,R,0.411,0.089
+Texas,32,TX-32,R,0.411,0.089
+North Carolina,6,NC-06,R,0.41,0.09
+Florida,8,FL-08,R,0.408,0.092
+Florida,18,FL-18,R,0.407,0.093
+Florida,11,FL-11,R,0.406,0.094
+North Carolina,5,NC-05,R,0.405,0.095
+North Carolina,8,NC-08,R,0.404,0.096
+South Carolina,2,SC-02,R,0.403,0.097
+New York,2,NY-02,R,0.402,0.098
+Indiana,5,IN-05,R,0.402,0.098
+North Carolina,9,NC-09,R,0.401,0.099
+Kansas,2,KS-02,R,0.401,0.099
+Washington,4,WA-04,R,0.4,0.1
+North Carolina,10,NC-10,R,0.399,0.101
+Nebraska,1,NE-01,R,0.399,0.101
+Florida,15,FL-15,R,0.398,0.102
+California,40,CA-40,R,0.397,0.103
+Georgia,12,GA-12,R,0.397,0.103
+Florida,27,FL-27,R,0.396,0.104
+Arizona,5,AZ-05,R,0.396,0.104
+Missouri,3,MO-03,R,0.395,0.105
+Ohio,10,OH-10,R,0.395,0.105
+Washington,5,WA-05,R,0.393,0.107
+Oklahoma,5,OK-05,R,0.393,0.107
+Michigan,1,MI-01,R,0.391,0.109
+Texas,25,TX-25,R,0.39,0.11
+Illinois,16,IL-16,R,0.39,0.11
+Tennessee,5,TN-05,R,0.39,0.11
+Florida,12,FL-12,R,0.39,0.11
+Texas,5,TX-05,R,0.389,0.111
+California,23,CA-23,R,0.389,0.111
+Wisconsin,6,WI-06,R,0.387,0.113
+Texas,24,TX-24,R,0.387,0.113
+Maryland,1,MD-01,R,0.386,0.114
+South Carolina,4,SC-04,R,0.384,0.116
+Florida,3,FL-03,R,0.384,0.116
+Florida,2,FL-02,R,0.384,0.116
+Louisiana,6,LA-06,R,0.383,0.117
+Florida,21,FL-21,R,0.382,0.118
+Missouri,4,MO-04,R,0.381,0.119
+Florida,26,FL-26,R,0.381,0.119
+Georgia,1,GA-01,R,0.38,0.12
+New York,21,NY-21,R,0.38,0.12
+Tennessee,7,TN-07,R,0.38,0.12
+Texas,27,TX-27,R,0.38,0.12
+Texas,21,TX-21,R,0.378,0.122
+Texas,23,TX-23,R,0.377,0.123
+Tennessee,4,TN-04,R,0.377,0.123
+Texas,17,TX-17,R,0.377,0.123
+Minnesota,6,MN-06,R,0.375,0.125
+Texas,6,TX-06,R,0.373,0.127
+Texas,38,TX-38,R,0.372,0.128
+Tennessee,8,TN-08,R,0.371,0.129
+Pennsylvania,11,PA-11,R,0.371,0.129
+Florida,17,FL-17,R,0.371,0.129
+Kentucky,6,KY-06,R,0.37,0.13
+Georgia,10,GA-10,R,0.369,0.131
+Florida,5,FL-05,R,0.369,0.131
+Texas,10,TX-10,R,0.368,0.132
+Texas,36,TX-36,R,0.366,0.134
+Texas,12,TX-12,R,0.365,0.135
+Texas,3,TX-03,R,0.365,0.135
+Texas,26,TX-26,R,0.365,0.135
+Wisconsin,7,WI-07,R,0.364,0.136
+South Carolina,5,SC-05,R,0.364,0.136
+Oklahoma,1,OK-01,R,0.364,0.136
+Pennsylvania,16,PA-16,R,0.363,0.137
+Texas,14,TX-14,R,0.363,0.137
+California,5,CA-05,R,0.362,0.138
+Tennessee,6,TN-06,R,0.36,0.14
+Mississippi,3,MS-03,R,0.36,0.14
+New York,11,NY-11,R,0.359,0.141
+Texas,22,TX-22,R,0.359,0.141
+Georgia,14,GA-14,R,0.356,0.144
+Texas,4,TX-04,R,0.356,0.144
+Ohio,14,OH-14,R,0.356,0.144
+Texas,31,TX-31,R,0.356,0.144
+Indiana,2,IN-02,R,0.356,0.144
+Wisconsin,5,WI-05,R,0.355,0.145
+Virginia,6,VA-06,R,0.355,0.145
+Florida,28,FL-28,R,0.354,0.146
+Texas,2,TX-02,R,0.353,0.147
+Georgia,7,GA-07,R,0.351,0.149
+South Carolina,7,SC-07,R,0.35,0.15
+Alabama,5,AL-05,R,0.35,0.15
+Kansas,4,KS-04,R,0.35,0.15
+Texas,8,TX-08,R,0.348,0.152
+Arizona,9,AZ-09,R,0.347,0.153
+Ohio,5,OH-05,R,0.345,0.155
+New York,24,NY-24,R,0.343,0.157
+New York,23,NY-23,R,0.342,0.158
+Montana,2,MT-02,R,0.34,0.16
+California,20,CA-20,R,0.34,0.16
+Florida,1,FL-01,R,0.34,0.16
+Oregon,2,OR-02,R,0.339,0.161
+Indiana,9,IN-09,R,0.337,0.163
+Georgia,3,GA-03,R,0.337,0.163
+Florida,19,FL-19,R,0.337,0.163
+Missouri,6,MO-06,R,0.336,0.164
+Idaho,2,ID-02,R,0.335,0.165
+Florida,6,FL-06,R,0.335,0.165
+Pennsylvania,14,PA-14,R,0.334,0.166
+Michigan,5,MI-05,R,0.333,0.167
+Arkansas,3,AR-03,R,0.332,0.168
+Indiana,6,IN-06,R,0.331,0.169
+Louisiana,4,LA-04,R,0.33,0.17
+Texas,11,TX-11,R,0.33,0.17
+Iowa,4,IA-04,R,0.328,0.172
+Michigan,2,MI-02,R,0.327,0.173
+Georgia,11,GA-11,R,0.327,0.173
+Alabama,6,AL-06,R,0.326,0.174
+Indiana,3,IN-03,R,0.326,0.174
+Ohio,12,OH-12,R,0.325,0.175
+Indiana,4,IN-04,R,0.323,0.177
+Ohio,6,OH-06,R,0.323,0.177
+Utah,2,UT-02,R,0.321,0.179
+Kentucky,4,KY-04,R,0.32,0.18
+New Jersey,4,NJ-04,R,0.32,0.18
+Alabama,1,AL-01,R,0.315,0.185
+Georgia,8,GA-08,R,0.311,0.189
+Georgia,9,GA-09,R,0.31,0.19
+Kansas,1,KS-01,R,0.309,0.191
+Tennessee,2,TN-02,R,0.307,0.193
+Michigan,9,MI-09,R,0.306,0.194
+North Dakota,AL,ND-AL,R,0.305,0.195
+Tennessee,3,TN-03,R,0.303,0.197
+Indiana,8,IN-08,R,0.302,0.198
+Oklahoma,4,OK-04,R,0.302,0.198
+Mississippi,1,MS-01,R,0.302,0.198
+Illinois,15,IL-15,R,0.3,0.2
+Pennsylvania,9,PA-09,R,0.295,0.205
+Minnesota,7,MN-07,R,0.295,0.205
+Ohio,2,OH-02,R,0.294,0.206
+Louisiana,3,LA-03,R,0.293,0.207
+Utah,4,UT-04,R,0.293,0.207
+West Virginia,2,WV-02,R,0.292,0.208
+Ohio,4,OH-04,R,0.285,0.215
+Pennsylvania,15,PA-15,R,0.285,0.215
+West Virginia,1,WV-01,R,0.283,0.217
+South Dakota,AL,SD-AL,R,0.28,0.22
+Virginia,9,VA-09,R,0.274,0.226
+Arkansas,4,AR-04,R,0.271,0.229
+Texas,13,TX-13,R,0.27,0.23
+Alabama,3,AL-03,R,0.27,0.23
+Oklahoma,3,OK-03,R,0.27,0.23
+Louisiana,5,LA-05,R,0.269,0.231
+Kentucky,2,KY-02,R,0.269,0.231
+Missouri,7,MO-07,R,0.269,0.231
+Idaho,1,ID-01,R,0.264,0.236
+South Carolina,3,SC-03,R,0.261,0.239
+Mississippi,4,MS-04,R,0.261,0.239
+Texas,1,TX-01,R,0.26,0.24
+Illinois,12,IL-12,R,0.258,0.242
+Pennsylvania,13,PA-13,R,0.258,0.242
+Kentucky,1,KY-01,R,0.253,0.247
+Texas,19,TX-19,R,0.25,0.25
+Arkansas,1,AR-01,R,0.248,0.252
+Wyoming,AL,WY-AL,R,0.248,0.252
+Louisiana,1,LA-01,R,0.235,0.265
+Utah,3,UT-03,R,0.226,0.274
+Oklahoma,2,OK-02,R,0.224,0.276
+Missouri,8,MO-08,R,0.223,0.277
+Tennessee,1,TN-01,R,0.199,0.301
+Nebraska,3,NE-03,R,0.196,0.304
+Kentucky,5,KY-05,R,0.18,0.32
+Alabama,4,AL-04,R,0.17,0.33

@@ -47,6 +47,7 @@ export function createTicker (rootEl, store) {
   // Say which source is actually in use, and change it when NYT drops out.
   function drawSource () {
     const h = store.allHealth()
+    // Any healthy NYT file means AP is still the call authority somewhere.
     const calls = nytHealthy(h) ? 'AP via NYT' : 'civicAPI'
     const down = Object.entries(h).filter(([, v]) => !v.ok).map(([k]) => k)
     const civicOk = (h.civicHouse && h.civicHouse.ok) || (h.civicSenate && h.civicSenate.ok)

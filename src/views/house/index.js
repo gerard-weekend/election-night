@@ -101,7 +101,16 @@ export default {
     }
 
     await loadSeats()
+    // Build the dial before committing: commit() notifies subscribers, which
+    // calls update() straight back, and that needs this.marks to exist.
     this.buildDial()
+    // Publish each seat's holder into the store so the ticker can tag a House
+    // gain the same way the Senate does.
+    for (const s of seats) {
+      const r = store.getRace(s.id)
+      if (r && !r.holder) r.holder = s.holder
+    }
+    store.commit()
     this.update()
   },
 
@@ -187,7 +196,7 @@ export default {
   },
 
   update () {
-    if (!this.el || !seats.length) return
+    if (!this.el || !this.marks || !seats.length) return
     this.applyAutoCalls()
     const store = this.store
     const st = this.stats()

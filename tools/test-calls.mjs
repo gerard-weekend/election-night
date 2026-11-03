@@ -21,8 +21,10 @@ const ok = (name, cond, detail = '') => {
 }
 
 const now = Date.now()
-const healthy = () => store.setHealth('nyt', { ok: true, lastOk: Date.now(), error: null })
-const stale = () => store.setHealth('nyt', { ok: true, lastOk: Date.now() - NYT_STALE_MS - 1000, error: null })
+// NYT health is per office, so set every NYT feed together.
+const NYT_FEEDS = ['nytHouse', 'nytSenate', 'nytCA']
+const healthy = () => NYT_FEEDS.forEach(n => store.setHealth(n, { ok: true, lastOk: Date.now(), error: null }))
+const stale = () => NYT_FEEDS.forEach(n => store.setHealth(n, { ok: true, lastOk: Date.now() - NYT_STALE_MS - 1000, error: null }))
 
 // Two-candidate partisan race used by most cases.
 function seed (key, { holder = 'R' } = {}) {

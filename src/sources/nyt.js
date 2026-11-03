@@ -5,9 +5,10 @@
 // than as data. Never touches the DOM.
 
 import store from '../store.js'
-import { num, partyBucket, nowMs } from '../util.js'
+import { num, partyBucket, nowMs, testUrl } from '../util.js'
 import { CALIFORNIA_RACES } from '../../config/california.js'
 import { seatId } from './civic.js'
+import { SEAT_HOLDERS } from '../../config/senate.js'
 
 const BASE = 'https://static01.nyt.com/elections-assets/pages/data/2026-11-03'
 const EVERY = 45e3
@@ -71,7 +72,7 @@ function markFail (name, e) {
 async function pollHouse () {
   const changed = new Set()
   try {
-    const j = await getJson(`${BASE}/results-house.json`)
+    const j = await getJson(testUrl('nytHouse') || `${BASE}/results-house.json`)
     let matched = 0
     for (const race of j.races) {
       // Louisiana House races are race_type_id 'L', not 'G'. Accept both.
@@ -88,8 +89,8 @@ async function pollHouse () {
       changed.add(id)
     }
     if (matched < MIN_HOUSE) throw new Error(`NYT format changed (only ${matched} House races recognised).`)
-    markOk('nyt')
-  } catch (e) { markFail('nyt', e) }
+    markOk('nytHouse')
+  } catch (e) { markFail('nytHouse', e) }
   store.commit(changed)
   setTimeout(pollHouse, EVERY)
 }
@@ -99,7 +100,7 @@ async function pollHouse () {
 async function pollSenate () {
   const changed = new Set()
   try {
-    const j = await getJson(`${BASE}/results-senate.json`)
+    const j = await getJson(testUrl('nytSenate') || `${BASE}/results-senate.json`)
     partyControl.senate = j.partyControlData || null
     let matched = 0
     for (const race of j.races) {
@@ -108,12 +109,17 @@ async function pollSenate () {
       if (!ru || !ru.state_postal || ru.state_postal === 'US') continue
       const id = `SEN-${ru.state_postal}`
       matched++
-      store.observe(id, { office: 'S', state: ru.state_postal, label: ru.name }, 'nyt', {
+      store.observe(id, { office: 'S', state: ru.state_postal, label: ru.name,
+        holder: SEAT_HOLDERS[ru.state_postal] || null }, 'nyt', {
         votes: { candidates: unitCandidates(race, ru), pctIn: num(ru.eevp) },
         call: callOf(race),
       })
       const r = store.getRace(id)
-      if (r) { r.rating = race.rating || race.general_rating || null; r.callStatus = race.race_call_status }
+      if (r) {
+        r.rating = race.rating || race.general_rating || null
+        r.callStatus = race.race_call_status
+        if (!r.holder) r.holder = SEAT_HOLDERS[ru.state_postal] || null
+      }
       changed.add(id)
     }
     if (matched < MIN_SENATE) throw new Error(`NYT format changed (only ${matched} Senate races recognised).`)
@@ -128,7 +134,7 @@ async function pollSenate () {
 async function pollCalifornia () {
   const changed = new Set()
   try {
-    const j = await getJson(`${BASE}/results-california.json`)
+    const j = await getJson(testUrl('nytCa') || `${BASE}/results-california.json`)
     const byId = new Map(j.races.map(r => [r.nyt_id, r]))
     let matched = 0
     for (const cfg of CALIFORNIA_RACES) {

@@ -58,3 +58,12 @@ export function surname (name) {
 }
 
 export const pct = (part, whole) => (whole > 0 ? (100 * part) / whole : 0)
+
+// Test-source override, e.g. ?nytSenate=rehearsal/senate-called.json
+// Used to rehearse calls before polls close. It only ever swaps a URL: there
+// is no fake clock, so poll-close logic always runs against the real time.
+// Returns null outside a browser, so the Node tools are unaffected.
+export function testUrl (name) {
+  if (typeof location === 'undefined') return null
+  return new URLSearchParams(location.search).get(name)
+}

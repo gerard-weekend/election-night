@@ -13,8 +13,18 @@ import { nowMs, surname as toSurname } from '../util.js'
 
 export const NYT_STALE_MS = 4 * 60e3
 
-export const nytHealthy = health =>
-  !!(health.nyt && health.nyt.lastOk && nowMs() - health.nyt.lastOk < NYT_STALE_MS)
+// Each office has its own NYT file, so each has its own health. Deciding a
+// Senate race's precedence from the House file's health meant a working House
+// feed could suppress a civicAPI Senate call that was the only one available.
+export const NYT_FEED_FOR = { H: 'nytHouse', S: 'nytSenate', PROP: 'nytCA', CA: 'nytCA' }
+
+export const nytHealthy = (health, office) => {
+  const names = office ? [NYT_FEED_FOR[office] || 'nytHouse'] : Object.keys(NYT_FEED_FOR).map(k => NYT_FEED_FOR[k])
+  return names.some(n => {
+    const h = health[n]
+    return !!(h && h.lastOk && nowMs() - h.lastOk < NYT_STALE_MS)
+  })
+}
 
 // A source's call record is { party, name, at }, or for measures { winner: 'yes'|'no', at }.
 // Map it onto one of the candidates we are actually showing. Party alone is not
@@ -48,7 +58,7 @@ function matchCandidate (race, rec) {
  */
 export function resolveCall (race, health) {
   const previous = race.call
-  const useNyt = nytHealthy(health)
+  const useNyt = nytHealthy(health, race.office)
   const src = race.callBySource
 
   let rec = null, source = null

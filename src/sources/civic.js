@@ -8,8 +8,9 @@
 //    whose major party shows zero while counting is re-checked per-race
 
 import store from '../store.js'
-import { num, partyBucket, sleep, nowMs } from '../util.js'
+import { num, partyBucket, sleep, nowMs, testUrl } from '../util.js'
 import { CALIFORNIA_RACES } from '../../config/california.js'
+import { SEAT_HOLDERS } from '../../config/senate.js'
 
 const BASE = 'https://civicapi.org/api/v2'
 export const HOUSE_ID = 87524
@@ -77,7 +78,7 @@ function markFail (name, e) {
 async function pollHouse () {
   const changed = new Set()
   try {
-    const j = await getJson(`${BASE}/race/${HOUSE_ID}`)
+    const j = await getJson(testUrl('civicHouse') || `${BASE}/race/${HOUSE_ID}`)
     const regions = j.region_results || {}
     if (!Object.keys(regions).length) throw new Error('civicAPI returned no districts.')
 
@@ -131,7 +132,7 @@ export const holdovers = { D: 0, R: 0, I: 0, O: 0 }
 async function pollSenate () {
   const changed = new Set()
   try {
-    const j = await getJson(`${BASE}/race/${SENATE_ID}`)
+    const j = await getJson(testUrl('civicSenate') || `${BASE}/race/${SENATE_ID}`)
     const regions = j.region_results || {}
     if (!Object.keys(regions).length) throw new Error('civicAPI returned no Senate races.')
 
@@ -144,7 +145,7 @@ async function pollSenate () {
       const st = key.toUpperCase()
       const id = `SEN-${st}`
       const cands = toCandidates(reg.candidates, 'race')
-      store.observe(id, { office: 'S', state: st, label: reg.name || st },
+      store.observe(id, { office: 'S', state: st, label: reg.name || st, holder: SEAT_HOLDERS[st] || null },
         'civic', { votes: { candidates: cands, pctIn: num(reg.percent_reporting) }, call: callFrom(cands) })
       changed.add(id)
     }

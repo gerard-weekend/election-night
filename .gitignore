@@ -6,3 +6,4 @@ node_modules/
 data/replay/
 
 # Smoke-test screenshots land in /tmp, not here
+rehearsal/

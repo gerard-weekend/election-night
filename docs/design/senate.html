@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Senate</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+.seat { position: absolute; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; }
+.seat[data-state="undecided"] { box-shadow: inset 0 0 0 2px var(--track); }
+.seat[data-state="hold"][data-party="D"] { background: var(--dem-dim); }
+.seat[data-state="hold"][data-party="R"] { background: var(--gop-dim); }
+.seat[data-state="won"], .seat[data-state="gain"] { background: var(--c); }
+.seat[data-state="gain"] { box-shadow: 0 0 0 2px var(--ground), 0 0 0 4.5px var(--gold); }
+.tile { position: absolute; --size: 46px; }
+.legend { position: absolute; left: 654px; top: 530px; width: 234px; display: flex; flex-direction: column; gap: 16px; }
+.legend > div { display: flex; align-items: center; gap: 14px; font-size: 20px; color: var(--ink-2); }
+.legend .gl { --size: 30px; }
+.kr-head { display: flex; justify-content: space-between; align-items: center; height: 36px; }
+.kr { display: flex; align-items: center; gap: 20px; height: 57px; border-top: 1px solid var(--rule); }
+.kr .st { width: 52px; font-size: 36px; }
+.kr-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.kr-line { display: flex; justify-content: space-between; align-items: baseline; white-space: nowrap; }
+.kr .nm { font-size: 26px; font-weight: 600; }
+.kr .nm2 { font-size: 24px; color: var(--ink-2); }
+.kr .pl { font-size: 22px; margin-left: 8px; }
+.kr .pct { font-size: 40px; margin-left: 16px; }
+.kr .pct2 { font-size: 32px; color: var(--ink-2); margin-right: 14px; }
+.kr .gain { margin-left: 14px; vertical-align: 6px; }
+.kr-in { width: 118px; text-align: right; font-size: 30px; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<main class="stage" data-view="senate">
+<header class="hdr">
+  <div class="lbl">Midterms 2026 · Live results</div>
+  <div class="ttl">U.S. Senate</div>
+</header>
+
+<!-- Balance of power: 100-seat hemicycle. 65 seats not up (34 D, 31 R). -->
+<div class="lbl" style="position:absolute;left:468px;top:136px;transform:translateX(-50%);white-space:nowrap;letter-spacing:.1em"><span style="color:var(--dem-ink)">51 D</span> · control · <span style="color:var(--gop-ink)">50 R</span></div>
+<div style="position:absolute;left:467px;top:160px;width:2px;height:14px;background:var(--ink-2)"></div>
+<div data-field="senate.hemicycle">
+    <i class="seat" data-template="senate.seat" data-index="0" data-state="hold" data-party="D" style="left:348.0px;top:420.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="1" data-state="hold" data-party="D" style="left:318.0px;top:420.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="2" data-state="hold" data-party="D" style="left:288.0px;top:420.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="3" data-state="hold" data-party="D" style="left:258.0px;top:420.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="4" data-state="hold" data-party="D" style="left:228.0px;top:420.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="5" data-state="hold" data-party="D" style="left:229.7px;top:391.1px"></i>
+    <i class="seat" data-template="senate.seat" data-index="6" data-state="hold" data-party="D" style="left:260.1px;top:390.1px"></i>
+    <i class="seat" data-template="senate.seat" data-index="7" data-state="hold" data-party="D" style="left:290.5px;top:390.4px"></i>
+    <i class="seat" data-template="senate.seat" data-index="8" data-state="hold" data-party="D" style="left:320.9px;top:390.7px"></i>
+    <i class="seat" data-template="senate.seat" data-index="9" data-state="hold" data-party="D" style="left:235.0px;top:362.6px"></i>
+    <i class="seat" data-template="senate.seat" data-index="10" data-state="hold" data-party="D" style="left:352.1px;top:388.9px"></i>
+    <i class="seat" data-template="senate.seat" data-index="11" data-state="hold" data-party="D" style="left:266.5px;top:360.8px"></i>
+    <i class="seat" data-template="senate.seat" data-index="12" data-state="hold" data-party="D" style="left:297.8px;top:361.6px"></i>
+    <i class="seat" data-template="senate.seat" data-index="13" data-state="hold" data-party="D" style="left:243.6px;top:334.9px"></i>
+    <i class="seat" data-template="senate.seat" data-index="14" data-state="hold" data-party="D" style="left:329.4px;top:362.6px"></i>
+    <i class="seat" data-template="senate.seat" data-index="15" data-state="hold" data-party="D" style="left:277.0px;top:332.8px"></i>
+    <i class="seat" data-template="senate.seat" data-index="16" data-state="hold" data-party="D" style="left:255.5px;top:308.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="17" data-state="hold" data-party="D" style="left:309.7px;top:334.3px"></i>
+    <i class="seat" data-template="senate.seat" data-index="18" data-state="hold" data-party="D" style="left:364.1px;top:360.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="19" data-state="hold" data-party="D" style="left:291.3px;top:306.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="20" data-state="hold" data-party="D" style="left:343.3px;top:336.7px"></i>
+    <i class="seat" data-template="senate.seat" data-index="21" data-state="hold" data-party="D" style="left:270.5px;top:283.7px"></i>
+    <i class="seat" data-template="senate.seat" data-index="22" data-state="hold" data-party="D" style="left:326.0px;top:309.4px"></i>
+    <i class="seat" data-template="senate.seat" data-index="23" data-state="hold" data-party="D" style="left:309.3px;top:282.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="24" data-state="hold" data-party="D" style="left:288.4px;top:260.9px"></i>
+    <i class="seat" data-template="senate.seat" data-index="25" data-state="hold" data-party="D" style="left:383.1px;top:335.1px"></i>
+    <i class="seat" data-template="senate.seat" data-index="26" data-state="hold" data-party="D" style="left:361.9px;top:313.9px"></i>
+    <i class="seat" data-template="senate.seat" data-index="27" data-state="hold" data-party="D" style="left:346.1px;top:287.6px"></i>
+    <i class="seat" data-template="senate.seat" data-index="28" data-state="hold" data-party="D" style="left:308.9px;top:240.4px"></i>
+    <i class="seat" data-template="senate.seat" data-index="29" data-state="hold" data-party="D" style="left:330.5px;top:261.3px"></i>
+    <i class="seat" data-template="senate.seat" data-index="30" data-state="hold" data-party="D" style="left:331.7px;top:222.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="31" data-state="hold" data-party="D" style="left:384.7px;top:295.3px"></i>
+    <i class="seat" data-template="senate.seat" data-index="32" data-state="hold" data-party="D" style="left:369.5px;top:269.3px"></i>
+    <i class="seat" data-template="senate.seat" data-index="33" data-state="hold" data-party="D" style="left:354.5px;top:243.3px"></i>
+    <i class="seat" data-template="senate.seat" data-index="34" data-state="won" data-party="D" style="left:408.0px;top:316.1px"></i>
+    <i class="seat" data-template="senate.seat" data-index="35" data-state="won" data-party="D" style="left:356.5px;top:207.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="36" data-state="won" data-party="D" style="left:380.8px;top:229.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="37" data-state="won" data-party="D" style="left:395.7px;top:255.2px"></i>
+    <i class="seat" data-template="senate.seat" data-index="38" data-state="won" data-party="D" style="left:410.6px;top:281.4px"></i>
+    <i class="seat" data-template="senate.seat" data-index="39" data-state="won" data-party="D" style="left:382.9px;top:195.6px"></i>
+    <i class="seat" data-template="senate.seat" data-index="40" data-state="won" data-party="D" style="left:408.8px;top:218.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="41" data-state="won" data-party="D" style="left:436.9px;top:304.1px"></i>
+    <i class="seat" data-template="senate.seat" data-index="42" data-state="won" data-party="D" style="left:423.8px;top:245.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="43" data-state="won" data-party="D" style="left:410.6px;top:187.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="44" data-state="won" data-party="D" style="left:438.7px;top:272.9px"></i>
+    <i class="seat" data-template="senate.seat" data-index="45" data-state="won" data-party="D" style="left:438.1px;top:212.1px"></i>
+    <i class="seat" data-template="senate.seat" data-index="46" data-state="won" data-party="D" style="left:439.1px;top:181.7px"></i>
+    <i class="seat" data-template="senate.seat" data-index="47" data-state="gain" data-party="D" style="left:453.1px;top:240.6px"></i>
+    <i class="seat" data-template="senate.seat" data-index="48" data-state="undecided" style="left:468.0px;top:300.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="49" data-state="undecided" style="left:468.0px;top:270.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="50" data-state="undecided" style="left:468.0px;top:210.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="51" data-state="won" data-party="R" style="left:468.0px;top:180.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="52" data-state="won" data-party="R" style="left:482.9px;top:240.6px"></i>
+    <i class="seat" data-template="senate.seat" data-index="53" data-state="won" data-party="R" style="left:496.9px;top:181.7px"></i>
+    <i class="seat" data-template="senate.seat" data-index="54" data-state="won" data-party="R" style="left:497.9px;top:212.1px"></i>
+    <i class="seat" data-template="senate.seat" data-index="55" data-state="won" data-party="R" style="left:497.3px;top:272.9px"></i>
+    <i class="seat" data-template="senate.seat" data-index="56" data-state="won" data-party="R" style="left:525.4px;top:187.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="57" data-state="won" data-party="R" style="left:512.2px;top:245.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="58" data-state="won" data-party="R" style="left:499.1px;top:304.1px"></i>
+    <i class="seat" data-template="senate.seat" data-index="59" data-state="won" data-party="R" style="left:527.2px;top:218.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="60" data-state="won" data-party="R" style="left:553.1px;top:195.6px"></i>
+    <i class="seat" data-template="senate.seat" data-index="61" data-state="won" data-party="R" style="left:525.4px;top:281.4px"></i>
+    <i class="seat" data-template="senate.seat" data-index="62" data-state="won" data-party="R" style="left:540.3px;top:255.2px"></i>
+    <i class="seat" data-template="senate.seat" data-index="63" data-state="won" data-party="R" style="left:555.2px;top:229.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="64" data-state="won" data-party="R" style="left:579.5px;top:207.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="65" data-state="won" data-party="R" style="left:528.0px;top:316.1px"></i>
+    <i class="seat" data-template="senate.seat" data-index="66" data-state="won" data-party="R" style="left:581.5px;top:243.3px"></i>
+    <i class="seat" data-template="senate.seat" data-index="67" data-state="won" data-party="R" style="left:566.5px;top:269.3px"></i>
+    <i class="seat" data-template="senate.seat" data-index="68" data-state="won" data-party="R" style="left:551.3px;top:295.3px"></i>
+    <i class="seat" data-template="senate.seat" data-index="69" data-state="hold" data-party="R" style="left:604.3px;top:222.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="70" data-state="hold" data-party="R" style="left:605.5px;top:261.3px"></i>
+    <i class="seat" data-template="senate.seat" data-index="71" data-state="hold" data-party="R" style="left:627.1px;top:240.4px"></i>
+    <i class="seat" data-template="senate.seat" data-index="72" data-state="hold" data-party="R" style="left:589.9px;top:287.6px"></i>
+    <i class="seat" data-template="senate.seat" data-index="73" data-state="hold" data-party="R" style="left:552.9px;top:335.1px"></i>
+    <i class="seat" data-template="senate.seat" data-index="74" data-state="hold" data-party="R" style="left:574.1px;top:313.9px"></i>
+    <i class="seat" data-template="senate.seat" data-index="75" data-state="hold" data-party="R" style="left:647.6px;top:260.9px"></i>
+    <i class="seat" data-template="senate.seat" data-index="76" data-state="hold" data-party="R" style="left:626.7px;top:282.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="77" data-state="hold" data-party="R" style="left:610.0px;top:309.4px"></i>
+    <i class="seat" data-template="senate.seat" data-index="78" data-state="hold" data-party="R" style="left:665.5px;top:283.7px"></i>
+    <i class="seat" data-template="senate.seat" data-index="79" data-state="hold" data-party="R" style="left:592.7px;top:336.7px"></i>
+    <i class="seat" data-template="senate.seat" data-index="80" data-state="hold" data-party="R" style="left:644.7px;top:306.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="81" data-state="hold" data-party="R" style="left:571.9px;top:360.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="82" data-state="hold" data-party="R" style="left:626.3px;top:334.3px"></i>
+    <i class="seat" data-template="senate.seat" data-index="83" data-state="hold" data-party="R" style="left:680.5px;top:308.5px"></i>
+    <i class="seat" data-template="senate.seat" data-index="84" data-state="hold" data-party="R" style="left:659.0px;top:332.8px"></i>
+    <i class="seat" data-template="senate.seat" data-index="85" data-state="hold" data-party="R" style="left:606.6px;top:362.6px"></i>
+    <i class="seat" data-template="senate.seat" data-index="86" data-state="hold" data-party="R" style="left:692.4px;top:334.9px"></i>
+    <i class="seat" data-template="senate.seat" data-index="87" data-state="hold" data-party="R" style="left:638.2px;top:361.6px"></i>
+    <i class="seat" data-template="senate.seat" data-index="88" data-state="hold" data-party="R" style="left:669.5px;top:360.8px"></i>
+    <i class="seat" data-template="senate.seat" data-index="89" data-state="hold" data-party="R" style="left:583.9px;top:388.9px"></i>
+    <i class="seat" data-template="senate.seat" data-index="90" data-state="hold" data-party="R" style="left:701.0px;top:362.6px"></i>
+    <i class="seat" data-template="senate.seat" data-index="91" data-state="hold" data-party="R" style="left:615.1px;top:390.7px"></i>
+    <i class="seat" data-template="senate.seat" data-index="92" data-state="hold" data-party="R" style="left:645.5px;top:390.4px"></i>
+    <i class="seat" data-template="senate.seat" data-index="93" data-state="hold" data-party="R" style="left:675.9px;top:390.1px"></i>
+    <i class="seat" data-template="senate.seat" data-index="94" data-state="hold" data-party="R" style="left:706.3px;top:391.1px"></i>
+    <i class="seat" data-template="senate.seat" data-index="95" data-state="hold" data-party="R" style="left:588.0px;top:420.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="96" data-state="hold" data-party="R" style="left:618.0px;top:420.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="97" data-state="hold" data-party="R" style="left:648.0px;top:420.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="98" data-state="hold" data-party="R" style="left:678.0px;top:420.0px"></i>
+    <i class="seat" data-template="senate.seat" data-index="99" data-state="hold" data-party="R" style="left:708.0px;top:420.0px"></i>
+</div>
+<div style="position:absolute;left:468px;top:328px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px">
+  <span class="fig" style="font-size:68px" data-field="senate.undecided">3</span>
+  <span class="lbl">Undecided</span>
+</div>
+<div style="position:absolute;left:48px;top:236px;display:flex;flex-direction:column;gap:4px">
+  <span class="lbl" style="color:var(--dem-ink)">Democrats</span>
+  <span class="fig" style="font-size:132px;color:var(--dem-ink)" data-field="senate.dem.total">48</span>
+  <span style="font-size:20px;color:var(--ink-2);line-height:1.3"><span data-field="senate.dem.holdover">34</span> not up<br>+ <span data-field="senate.dem.won">14</span> won</span>
+</div>
+<div style="position:absolute;right:1032px;top:236px;display:flex;flex-direction:column;align-items:flex-end;gap:4px;text-align:right">
+  <span class="lbl" style="color:var(--gop-ink)">Republicans</span>
+  <span class="fig" style="font-size:132px;color:var(--gop-ink)" data-field="senate.gop.total">49</span>
+  <span style="font-size:20px;color:var(--ink-2);line-height:1.3"><span data-field="senate.gop.holdover">31</span> not up<br>+ <span data-field="senate.gop.won">18</span> won</span>
+</div>
+
+<!-- Tile cartogram: 11 × 8 grid, 52 px pitch -->
+<div style="position:absolute;left:48px;top:506px;width:566px;height:410px" data-field="senate.map">
+    <span class="gl tile" data-template="senate.state" data-state-code="AK" data-status="counting" data-party="R" style="left:0px;top:0px;--p:34"><span class="abbr">AK</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="ME" data-status="gain" data-party="D" style="left:520px;top:0px"><span class="abbr">ME</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="WI" data-status="notup" data-holdover="S" style="left:260px;top:52px;--hold:linear-gradient(90deg,var(--dem-faint) 50%,var(--gop-faint) 50%)"><span class="abbr">WI</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="VT" data-status="notup" data-holdover="D" style="left:468px;top:52px;--hold:var(--dem-faint)"><span class="abbr">VT</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="NH" data-status="called" data-party="D" style="left:520px;top:52px"><span class="abbr">NH</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="WA" data-status="notup" data-holdover="D" style="left:0px;top:104px;--hold:var(--dem-faint)"><span class="abbr">WA</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="ID" data-status="called" data-party="R" style="left:52px;top:104px"><span class="abbr">ID</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="MT" data-status="called" data-party="R" style="left:104px;top:104px"><span class="abbr">MT</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="ND" data-status="notup" data-holdover="R" style="left:156px;top:104px;--hold:var(--gop-faint)"><span class="abbr">ND</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="MN" data-status="called" data-party="D" style="left:208px;top:104px"><span class="abbr">MN</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="IL" data-status="called" data-party="D" style="left:260px;top:104px"><span class="abbr">IL</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="MI" data-status="called" data-party="D" style="left:312px;top:104px"><span class="abbr">MI</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="NY" data-status="notup" data-holdover="D" style="left:416px;top:104px;--hold:var(--dem-faint)"><span class="abbr">NY</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="MA" data-status="called" data-party="D" style="left:468px;top:104px"><span class="abbr">MA</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="OR" data-status="called" data-party="D" style="left:0px;top:156px"><span class="abbr">OR</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="NV" data-status="notup" data-holdover="D" style="left:52px;top:156px;--hold:var(--dem-faint)"><span class="abbr">NV</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="WY" data-status="called" data-party="R" style="left:104px;top:156px"><span class="abbr">WY</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="SD" data-status="called" data-party="R" style="left:156px;top:156px"><span class="abbr">SD</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="IA" data-status="called" data-party="R" style="left:208px;top:156px"><span class="abbr">IA</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="IN" data-status="notup" data-holdover="R" style="left:260px;top:156px;--hold:var(--gop-faint)"><span class="abbr">IN</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="OH" data-status="counting" data-party="R" style="left:312px;top:156px;--p:88"><span class="abbr">OH</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="PA" data-status="notup" data-holdover="S" style="left:364px;top:156px;--hold:linear-gradient(90deg,var(--dem-faint) 50%,var(--gop-faint) 50%)"><span class="abbr">PA</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="NJ" data-status="called" data-party="D" style="left:416px;top:156px"><span class="abbr">NJ</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="CT" data-status="notup" data-holdover="D" style="left:468px;top:156px;--hold:var(--dem-faint)"><span class="abbr">CT</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="RI" data-status="called" data-party="D" style="left:520px;top:156px"><span class="abbr">RI</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="CA" data-status="notup" data-holdover="D" style="left:0px;top:208px;--hold:var(--dem-faint)"><span class="abbr">CA</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="UT" data-status="notup" data-holdover="R" style="left:52px;top:208px;--hold:var(--gop-faint)"><span class="abbr">UT</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="CO" data-status="called" data-party="D" style="left:104px;top:208px"><span class="abbr">CO</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="NE" data-status="called" data-party="R" style="left:156px;top:208px"><span class="abbr">NE</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="MO" data-status="notup" data-holdover="R" style="left:208px;top:208px;--hold:var(--gop-faint)"><span class="abbr">MO</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="KY" data-status="called" data-party="R" style="left:260px;top:208px"><span class="abbr">KY</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="WV" data-status="called" data-party="R" style="left:312px;top:208px"><span class="abbr">WV</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="VA" data-status="called" data-party="D" style="left:364px;top:208px"><span class="abbr">VA</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="MD" data-status="notup" data-holdover="D" style="left:416px;top:208px;--hold:var(--dem-faint)"><span class="abbr">MD</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="DE" data-status="called" data-party="D" style="left:468px;top:208px"><span class="abbr">DE</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="AZ" data-status="notup" data-holdover="D" style="left:52px;top:260px;--hold:var(--dem-faint)"><span class="abbr">AZ</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="NM" data-status="called" data-party="D" style="left:104px;top:260px"><span class="abbr">NM</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="KS" data-status="called" data-party="R" style="left:156px;top:260px"><span class="abbr">KS</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="AR" data-status="called" data-party="R" style="left:208px;top:260px"><span class="abbr">AR</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="TN" data-status="called" data-party="R" style="left:260px;top:260px"><span class="abbr">TN</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="NC" data-status="counting" data-party="D" style="left:312px;top:260px;--p:76"><span class="abbr">NC</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="SC" data-status="called" data-party="R" style="left:364px;top:260px"><span class="abbr">SC</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="OK" data-status="called" data-party="R" style="left:156px;top:312px"><span class="abbr">OK</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="LA" data-status="called" data-party="R" style="left:208px;top:312px"><span class="abbr">LA</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="MS" data-status="called" data-party="R" style="left:260px;top:312px"><span class="abbr">MS</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="AL" data-status="called" data-party="R" style="left:312px;top:312px"><span class="abbr">AL</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="GA" data-status="called" data-party="D" style="left:364px;top:312px"><span class="abbr">GA</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="HI" data-status="notup" data-holdover="D" style="left:0px;top:364px;--hold:var(--dem-faint)"><span class="abbr">HI</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="TX" data-status="called" data-party="R" style="left:156px;top:364px"><span class="abbr">TX</span></span>
+    <span class="gl tile" data-template="senate.state" data-state-code="FL" data-status="called" data-party="R" style="left:416px;top:364px"><span class="abbr">FL</span></span>
+</div>
+<div class="legend">
+  <div><span class="gl" data-status="none"></span>No votes</div>
+  <div><span class="gl" data-status="counting" data-party="N" style="--p:60"></span>Counting</div>
+  <div><span class="gl" data-status="called" data-party="N"></span>Called</div>
+  <div><span class="gl" data-status="gain" data-party="N"></span>Gain</div>
+  <div><span class="gl" data-status="notup" style="--hold:var(--track)"></span>Not up</div>
+  <div style="display:block;margin-top:22px;padding-top:18px;border-top:1px solid var(--rule)">
+    <div class="lbl" style="margin-bottom:10px">Flips so far</div>
+    <div style="display:flex;gap:26px"><span class="fig" style="font-size:52px;color:var(--dem-ink)">D +<span data-field="senate.flips.dem">1</span></span><span class="fig" style="font-size:52px;color:var(--gop-ink)">R +<span data-field="senate.flips.gop">0</span></span></div>
+  </div>
+</div>
+
+<!-- Key races: up to 15 rows, alphabetical -->
+<section style="position:absolute;left:968px;top:48px;width:904px" data-field="senate.races">
+  <div class="kr-head">
+    <span class="lbl" style="color:var(--ink-2)">Key races · % expected in at right</span>
+    <div class="fresh" data-field="shell.updated"><i></i><span data-field="shell.updatedText">Updated 20 s ago</span></div>
+  </div>
+    <div class="kr" data-template="senate.race" data-race="AK">
+      <span class="gl" data-field="race.glyph" data-status="counting" data-party="R" style="--p:34"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">AK</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Lindqvist</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">51.2</span></span>
+          <span data-template="race.candidate" data-party="D"><span class="fig pct2" data-field="cand.pct">44.6</span><span class="nm2" data-field="cand.name">Tanaka</span><span class="fig pl pink" data-field="cand.party">D</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:53"><i data-party="R"></i><i data-party="D"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">34%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="FL">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="R" style="--p:97"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">FL</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Castellano</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">54.0</span></span>
+          <span data-template="race.candidate" data-party="D"><span class="fig pct2" data-field="cand.pct">44.9</span><span class="nm2" data-field="cand.name">Rivera</span><span class="fig pl pink" data-field="cand.party">D</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:55"><i data-party="R"></i><i data-party="D"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">97%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="GA">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="D" style="--p:95"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">GA</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Whitlock</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">51.6</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">47.6</span><span class="nm2" data-field="cand.name">Barrow</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:52"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">95%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="IA">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="R" style="--p:96"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">IA</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Brandt</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">53.4</span></span>
+          <span data-template="race.candidate" data-party="D"><span class="fig pct2" data-field="cand.pct">44.9</span><span class="nm2" data-field="cand.name">Okafor</span><span class="fig pl pink" data-field="cand.party">D</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:54"><i data-party="R"></i><i data-party="D"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">96%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="KS">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="R" style="--p:94"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">KS</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Hollis</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">56.1</span></span>
+          <span data-template="race.candidate" data-party="D"><span class="fig pct2" data-field="cand.pct">41.8</span><span class="nm2" data-field="cand.name">Medina</span><span class="fig pl pink" data-field="cand.party">D</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:57"><i data-party="R"></i><i data-party="D"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">94%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="ME">
+      <span class="gl" data-field="race.glyph" data-status="gain" data-party="D" style="--p:84"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">ME</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Pelletier</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">51.8</span><span class="gain" data-field="race.gain">Gain</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">46.9</span><span class="nm2" data-field="cand.name">Caldwell</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:52"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">84%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="MI">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="D" style="--p:89"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">MI</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Novak</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">51.4</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">46.7</span><span class="nm2" data-field="cand.name">Sterling</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:52"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">89%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="MN">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="D" style="--p:92"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">MN</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Lindgren</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">53.2</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">44.6</span><span class="nm2" data-field="cand.name">Haugen</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:54"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">92%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="NC">
+      <span class="gl" data-field="race.glyph" data-status="counting" data-party="D" style="--p:76"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">NC</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Abernathy</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">49.6</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">49.1</span><span class="nm2" data-field="cand.name">Whitfield</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:50"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">76%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="NE">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="R" style="--p:93"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">NE</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Ostrander</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">52.8</span></span>
+          <span data-template="race.candidate" data-party="I"><span class="fig pct2" data-field="cand.pct">47.2</span><span class="nm2" data-field="cand.name">Kowalski</span><span class="fig pl pink" data-field="cand.party">I</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:53"><i data-party="R"></i><i data-party="I"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">93%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="NH">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="D" style="--p:97"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">NH</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Ashworth</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">52.0</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">46.9</span><span class="nm2" data-field="cand.name">Doucette</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:53"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">97%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="OH">
+      <span class="gl" data-field="race.glyph" data-status="counting" data-party="R" style="--p:88"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">OH</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Whitaker</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">50.3</span></span>
+          <span data-template="race.candidate" data-party="D"><span class="fig pct2" data-field="cand.pct">48.9</span><span class="nm2" data-field="cand.name">Ramos</span><span class="fig pl pink" data-field="cand.party">D</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:51"><i data-party="R"></i><i data-party="D"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">88%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="SC">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="R" style="--p:98"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">SC</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Pinckney</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">56.4</span></span>
+          <span data-template="race.candidate" data-party="D"><span class="fig pct2" data-field="cand.pct">42.3</span><span class="nm2" data-field="cand.name">Moultrie</span><span class="fig pl pink" data-field="cand.party">D</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:57"><i data-party="R"></i><i data-party="D"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">98%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="TX">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="R" style="--p:91"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">TX</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Garrison</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">52.6</span></span>
+          <span data-template="race.candidate" data-party="D"><span class="fig pct2" data-field="cand.pct">45.9</span><span class="nm2" data-field="cand.name">Villarreal</span><span class="fig pl pink" data-field="cand.party">D</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:53"><i data-party="R"></i><i data-party="D"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">91%</span>
+    </div>
+    <div class="kr" data-template="senate.race" data-race="VA">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="D" style="--p:96"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">VA</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Harlan</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">54.2</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">44.7</span><span class="nm2" data-field="cand.name">Pruitt</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:55"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">96%</span>
+    </div>
+</section>
+
+<footer class="tk" data-field="shell.ticker">
+  <div class="tk-prog" data-field="shell.progress" style="--progress:70"></div>
+  <span class="tk-clock" data-field="shell.clock">1:18 AM ET</span>
+  <div class="tk-calls" data-field="shell.calls">
+    <span data-template="shell.call" data-party="R"><b data-field="call.race">NE Sen</b><span data-field="call.result">GOP hold</span></span>
+    <span data-template="shell.call" data-party="D"><b data-field="call.race">ME Sen</b><span data-field="call.result">Dem</span> <span class="gain">Gain</span></span>
+    <span data-template="shell.call" data-party="D"><b data-field="call.race">CA Gov</b><span data-field="call.result">Dem hold</span></span>
+    <span data-template="shell.call" data-party="D"><b data-field="call.race">MN Sen</b><span data-field="call.result">Dem hold</span></span>
+  </div>
+  <div class="tk-right">
+    <span class="tk-next" data-field="shell.rotation"><span data-field="shell.view">Senate</span> · Next: <span data-field="shell.next">California</span> <span data-field="shell.nextIn">0:24</span></span>
+    <span class="tk-src">Calls: AP via NYT · Votes: civicAPI</span>
+  </div>
+</footer>
+</main>
+<script src="fit.js"></script>
+</body>
+</html>

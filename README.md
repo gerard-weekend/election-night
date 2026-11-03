@@ -31,15 +31,20 @@ control.html    the operator window, on the laptop; talks to the TV over a
 src/sources/    civicAPI and NYT: fetch, retry, record health
 src/model/      one normalized Race shape, and who gets to call a race
 src/store.js    holds every race; views subscribe to it
+src/render/     adapter from the store to the design's data contract, plus
+                small helpers for filling its markup
 src/views/      house, senate, california — read from the store, never fetch
 config/         the California race list, Senate key races, rotation timings
 tools/          server, rehearsal generator, test suites
 ```
 
-Styling in `assets/placeholder.css` is deliberately plain and meant to be
-replaced. Every value sits behind a `data-field` hook and every repeated row
-behind `data-template`, so a redesign is a markup and CSS swap with no changes
-under `src/`.
+The visual design is the designer's, taken verbatim from `docs/design/`:
+`tokens.css` is the whole design system and `index.html` is generated from
+their three pages by `node tools/build-index.mjs`. Nothing under `src/`
+restyles anything — the renderers only fill `data-field` slots, clone
+`data-template` rows, and set the data attributes and CSS custom properties
+the design already reads. `docs/design/DATA-CONTRACT.md` is the spec they
+implement.
 
 ## Checks
 

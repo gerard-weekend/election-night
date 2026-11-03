@@ -1,0 +1,38 @@
+/* Shell-only rules: stacking the three stages, the cross-fade between them,
+ * and the burn-in drift. Everything visual belongs to the designer's
+ * tokens.css — nothing here restyles a view.
+ */
+
+body { margin: 0; background: #000; overflow: hidden; }
+
+/* All three stages are in the DOM at once and cross-fade, so a view never
+ * re-renders on switch (SHELL.md). fit.js owns --scale on each one. */
+.stage {
+  position: absolute; left: 50%; top: 50%;
+  opacity: 0; pointer-events: none;
+  /* --drift-x/y are nudged every 10 minutes to spare the panel. */
+  transform: translate(-50%, -50%)
+             translate(calc(var(--drift-x, 0px)), calc(var(--drift-y, 0px)))
+             scale(var(--scale, 1));
+  transform-origin: center center;
+}
+.stage.is-active { opacity: 1; pointer-events: auto; }
+
+/* 500 ms cross-fade, content drifting 24 px left as it goes (MOTION.md).
+ * The frame itself never slides, so the shift is applied inside the stage. */
+.stage > *:not(.tk) { transition: transform 500ms cubic-bezier(.2, 0, 0, 1), opacity 500ms cubic-bezier(.2, 0, 0, 1); }
+.stage:not(.is-active) > *:not(.tk) { transform: translateX(-24px); }
+.stage { transition: opacity 500ms cubic-bezier(.2, 0, 0, 1); }
+
+/* The ticker is outside the stages and scaled to match them. */
+.tk-fixed {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%) scale(var(--scale, 1));
+  transform-origin: center center;
+  width: 1920px; height: 1080px;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage, .stage > * { transition: none !important; }
+}

@@ -61,6 +61,7 @@
         <h2 style="margin-top:0">Feed health</h2>
         <div id="feeds"></div>
         <div class="row" style="margin-top:12px">
+          <button id="refresh">Force refresh</button>
           <button id="clear">Clear stale cache</button>
           <button id="reload">Reload TV</button>
         </div>
@@ -120,6 +121,7 @@ $('prev').onclick = () => send('prev')
 $('unpin').onclick = () => send('unpin')
 $('clear').onclick = () => { if (confirm('Clear saved races and manual calls, then reload the TV?')) send('clear-cache') }
 $('reload').onclick = () => send('reload')
+$('refresh').onclick = () => send('refresh')
 
 $('manual').addEventListener('keydown', e => {
   if (e.key !== 'Enter') return
@@ -184,7 +186,7 @@ function render () {
   $('counts').innerHTML = `
     <div class="feed"><span>House</span><span class="muted">${state.counts.house} / 435</span></div>
     <div class="feed"><span>Senate</span><span class="muted">${state.counts.senate} / 35</span></div>
-    <div class="feed"><span>California</span><span class="muted">${state.counts.ca} / 11</span></div>`
+    <div class="feed"><span>California</span><span class="muted">${state.counts.ca} / 12</span></div>`
   $('single').textContent = state.singleSourced.length
     ? state.singleSourced.join(', ') + ' — one feed only, no cross-check'
     : 'none'

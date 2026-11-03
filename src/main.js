@@ -1,4 +1,4 @@
-// Boot the TV page: start the feeds, mount the shell, start the rotation.
+// Boot the TV page: start the feeds, mount the three stages, start rotating.
 //
 // This page owns all the data. The control window is a remote that talks to it
 // over a BroadcastChannel, so there is exactly one set of requests all evening.
@@ -6,7 +6,6 @@
 import store from './store.js'
 import * as civic from './sources/civic.js'
 import * as nyt from './sources/nyt.js'
-import { mountStage, keepAwake } from './shell/stage.js'
 import { createRotator } from './shell/rotator.js'
 import { createTicker } from './shell/ticker.js'
 import { makeBus, MSG } from './shell/bus.js'
@@ -19,35 +18,11 @@ import californiaView from './views/california/index.js'
 
 const views = { house: houseView, senate: senateView, california: californiaView }
 
-const stageEl = document.getElementById('stage')
-const viewsEl = document.getElementById('views')
-const tickerEl = document.getElementById('ticker')
-const rotEl = document.getElementById('rotation')
-
-mountStage(stageEl)
-keepAwake()
-
-createTicker(tickerEl, store)
-const rotator = createRotator(viewsEl, views, store)
-
-// ---- rotation indicator: where we are and what is next ----
-rotator.onChange(s => {
-  const secs = Math.ceil(s.remaining / 1000)
-  rotEl.innerHTML = `
-    <span data-field="shell.rotation.current">${s.currentTitle || ''}</span>
-    <span class="rot-next" data-field="shell.rotation.next">${
-      s.pinned ? 'PINNED' : s.paused ? 'PAUSED' : `NEXT: ${(s.nextTitle || '').toUpperCase()}`
-    }</span>
-    <span class="rot-count" data-field="shell.rotation.remaining">${s.paused || s.pinned ? '' : secs + 's'}</span>`
-})
-
-store.subscribe(changed => rotator.update(changed))
-
 // Seed the configured California races before any feed answers, so the view
-// can show them as "waiting" with the right labels, and so the operator window
-// knows immediately which ones have only one source behind them.
+// has the right labels and the operator window knows at once which ones have
+// only one source behind them.
 for (const cfg of CALIFORNIA_RACES) {
-  if (cfg.existing) continue     // the House feeds own this one
+  if (cfg.existing) continue        // the House feeds own this one
   store.observe(cfg.key, {
     office: cfg.kind === 'prop' ? 'PROP' : 'CA',
     label: cfg.label, kind: cfg.kind, state: 'CA',
@@ -55,8 +30,36 @@ for (const cfg of CALIFORNIA_RACES) {
   const r = store.getRace(cfg.key)
   r.singleSourced = cfg.civicId == null
   r.title = cfg.title || null
+  r.short = cfg.short || cfg.label
 }
 store.commit()
+
+const ticker = createTicker(store)
+const rotator = createRotator(views, store)
+rotator.onChange(s => ticker.setRotation(s))
+store.subscribe(changed => rotator.update(changed))
+
+// Track the first leader of each race so "Lead changed" can be honest about
+// what changed since counting began, rather than since page load.
+store.subscribe(() => {
+  for (const r of store.all()) {
+    if (!r.leader) continue
+    if (r.firstLeader == null) r.firstLeader = r.leader
+    else if (r.firstLeader !== r.leader) r.leadChanged = true
+  }
+})
+
+// Chrome allows this on localhost. It stops the display dimming mid-evening,
+// and the lock is dropped whenever the tab is hidden, so re-request on return.
+async function keepAwake () {
+  if (!('wakeLock' in navigator)) return
+  const request = async () => { try { await navigator.wakeLock.request('screen') } catch (e) {} }
+  await request()
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') request()
+  })
+}
+keepAwake()
 
 civic.start()
 nyt.start()
@@ -66,8 +69,6 @@ rotator.start()
 
 const bus = makeBus('tv')
 
-// A compact snapshot — enough for the control window to show feed health, the
-// rotation state and the call log without fetching anything itself.
 function snapshot () {
   return {
     health: store.allHealth(),
@@ -104,13 +105,14 @@ bus.on(msg => {
     case 'unpin': rotator.unpin(); break
     case 'duration': rotator.setDuration(value.id, value.ms); break
     case 'manual': store.setManualCall(value.key, value.call); store.commit(new Set([value.key])); break
+    case 'refresh': civic.refresh(); nyt.refresh(); break
     case 'clear-cache': store.clearCache(); location.reload(); break
     case 'reload': location.reload(); break
   }
   pushState()
 })
 
-// ---- keyboard fallback on the TV itself, if the control window is shut ----
+// ---- keyboard on the TV itself, per SHELL.md ----
 addEventListener('keydown', e => {
   if (e.key === ' ') { e.preventDefault(); rotator.pause() }
   else if (e.key === 'ArrowRight') rotator.next()
@@ -119,6 +121,10 @@ addEventListener('keydown', e => {
   else if (['1', '2', '3'].includes(e.key)) {
     const v = VIEWS[+e.key - 1]
     if (v) rotator.pin(v.id)
+  } else if (e.key === 'r' || e.key === 'R') { civic.refresh(); nyt.refresh() }
+  else if (e.key === 'f' || e.key === 'F') {
+    if (document.fullscreenElement) document.exitFullscreen()
+    else document.documentElement.requestFullscreen().catch(() => {})
   }
 })
 

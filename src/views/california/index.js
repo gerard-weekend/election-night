@@ -1,131 +1,103 @@
-// California view: the 11 configured races, driven by config/california.js.
+// California view: fills the designer's markup, which has fixed slots for this
+// exact mix — four race blocks (Governor large, then AG, Oakland Mayor, CA-11)
+// and eight measure rows (six statewide, two local).
 //
-// California counts for days, so "% expected vote in" appears on every race
-// and a partial count has to look normal rather than broken. A measure is
-// "passing"/"failing" on the numbers but only "PASSES"/"FAILS" once called.
+// The race blocks are NOT cloned: each has its own size in the design, so they
+// are filled in place by position. Measure rows are filled by index too, since
+// the count is fixed at eight.
 
-import { CALIFORNIA_RACES } from '../../../config/california.js'
-import { propStatus, statusOf } from '../../model/race.js'
-import { freshness } from '../../shell/ticker.js'
-
-// Two pages alternate within the view's slot if more races are configured
-// than fit comfortably. Eleven fits on one.
-const PER_PAGE = 12
+import { californiaData } from '../../render/adapt.js'
+import { field, templates, setText, setAttr, setVar, show, pct1, pct0 } from '../../render/dom.js'
 
 export default {
   id: 'california',
   title: 'California',
 
-  ready (store) { return CALIFORNIA_RACES.some(c => store.getRace(c.key)) },
+  ready (store) { return californiaData(store).races.some(r => r.candidates.length) },
 
   mount (root, store) {
+    this.root = root
     this.store = store
-    this.page = 0
-    root.innerHTML = `
-      <section class="v-ca">
-        <header class="v-head">
-          <h1>California</h1>
-          <span class="v-fresh" data-field="ca.freshness"></span>
-        </header>
-        <div class="ca-note" data-field="ca.note">California counts for days — figures are partial</div>
-        <div class="ca-grid" data-field="ca.races"></div>
-        <div class="ca-pager" data-field="ca.pager"></div>
-      </section>`
-    this.el = {
-      grid: root.querySelector('[data-field="ca.races"]'),
-      pager: root.querySelector('[data-field="ca.pager"]'),
-      fresh: root.querySelector('[data-field="ca.freshness"]'),
-    }
+    this.raceBlocks = templates(root, 'ca.race')
+    this.propRows = templates(root, 'ca.prop')
     this.update()
   },
 
-  show () {
-    // Alternate pages each time the view comes round, if there are two.
-    const pages = Math.ceil(CALIFORNIA_RACES.length / PER_PAGE)
-    if (pages > 1) { this.page = (this.page + 1) % pages; this.update() }
+  fillRace (block, r) {
+    // The office name shares its element with a small grey note, so only the
+    // leading text node is replaced.
+    const off = field(block, 'race.office')
+    if (off) {
+      const sub = off.querySelector('.sub')
+      if (off.firstChild && off.firstChild.nodeType === 3) off.firstChild.nodeValue = r.office
+      else if (!sub) setText(off, r.office)
+      if (sub) { setText(sub, r.sub || ''); show(sub, !!r.sub) }
+    }
+
+    const glyph = field(block, 'race.glyph')
+    setAttr(glyph, 'data-status', r.status)
+    setAttr(glyph, 'data-party', r.glyphParty)
+    setVar(glyph, '--p', r.pctIn)
+
+    setText(field(block, 'race.status'),
+      r.status === 'called' || r.status === 'gain' ? 'Projected · AP' : `${pct0(r.pctIn)} in`)
+
+    // "Lead changed" only appears once it has actually happened.
+    const lead = field(block, 'race.leadChanged')
+    if (lead) show(lead, r.leadChanged)
+
+    templates(block, 'race.candidate').forEach((row, i) => {
+      const c = r.candidates[i]
+      show(row, !!c)
+      if (!c) return
+      setAttr(row, 'data-party', c.party)
+      setText(field(row, 'cand.name'), c.name)
+      // Nonpartisan races show no party letter at all.
+      setText(field(row, 'cand.party'), c.party === 'N' ? '' : c.party)
+      setText(field(row, 'cand.pct'), r.counted ? pct1(c.pct) : '—')
+      const bar = field(row, 'cand.bar')
+      setVar(bar, '--pct', c.pct)
+      // 'same' when the runner-up shares the leader's party — the top-two
+      // case — so the two bars stay distinguishable without colour.
+      setAttr(bar, 'data-style',
+        i === 0 ? 'lead' : c.party === r.candidates[0].party ? 'same' : 'trail')
+    })
   },
 
-  cardProp (cfg, r) {
-    const yes = r.candidates.find(c => c.id === 'yes')
-    const no = r.candidates.find(c => c.id === 'no')
-    const total = (yes ? yes.votes : 0) + (no ? no.votes : 0)
-    const yPct = total ? (100 * yes.votes) / total : 0
-    const st = propStatus(r)
-    const verdict = { passes: 'PASSES', fails: 'FAILS', passing: 'Passing', failing: 'Failing', none: '' }[st]
-    return `
-      <article class="ca-card ca-prop" data-template="ca.prop" data-key="${r.key}"
-               data-status="${statusOf(r)}" data-prop-status="${st}">
-        <div class="ca-label">${cfg.label}</div>
-        <div class="ca-title">${cfg.title || ''}</div>
-        <div class="ca-yn">
-          <div class="yn yn-yes" data-leading="${yPct > 50 ? '1' : ''}">
-            <span class="yn-k">YES</span>
-            <span class="yn-p" data-field="${r.key}.yes.pct">${yPct.toFixed(1)}%</span>
-            <span class="yn-v">${yes ? yes.votes.toLocaleString() : '0'}</span>
-          </div>
-          <div class="yn yn-no" data-leading="${yPct < 50 && total ? '1' : ''}">
-            <span class="yn-k">NO</span>
-            <span class="yn-p" data-field="${r.key}.no.pct">${(total ? 100 - yPct : 0).toFixed(1)}%</span>
-            <span class="yn-v">${no ? no.votes.toLocaleString() : '0'}</span>
-          </div>
-        </div>
-        <div class="ca-bar" style="--yes:${yPct}"></div>
-        <div class="ca-meta">
-          <span class="ca-in">${r.pctIn.toFixed(0)}% expected vote in</span>
-          <span class="ca-verdict">${verdict}${r.call ? ` · ${r.call.source}` : ''}</span>
-          ${r.singleSourced ? '<span class="ca-single" title="single source">NYT only</span>' : ''}
-        </div>
-      </article>`
-  },
+  fillProp (row, m) {
+    setAttr(row, 'data-result', m.result || '')
+    setText(field(row, 'prop.number'), m.label)
+    setText(field(row, 'prop.title'), m.title)
+    setText(field(row, 'prop.yes'), m.counted ? pct1(m.yesPct) : '—')
+    setText(field(row, 'prop.no'), m.counted ? pct1(m.noPct) : '—')
 
-  cardRace (cfg, r) {
-    // Top-two means two candidates can share a party, so the two rows must be
-    // told apart by name, not colour alone.
-    const cands = r.candidates.slice(0, 2)
-    const rows = cands.map(c => `
-      <div class="ca-cand" data-party="${c.party || 'O'}"
-           data-winner="${r.call && r.call.winner === c.id ? '1' : ''}"
-           data-leading="${r.leader === c.id ? '1' : ''}">
-        <span class="ca-name">${c.name}</span>
-        <span class="ca-party">${c.party && c.party !== 'O' ? c.party : ''}</span>
-        <span class="ca-pct">${c.pct.toFixed(1)}%</span>
-        <span class="ca-votes">${c.votes.toLocaleString()}</span>
-      </div>`).join('')
-    return `
-      <article class="ca-card ca-race" data-template="ca.race" data-key="${r.key}"
-               data-status="${statusOf(r)}">
-        <div class="ca-label">${cfg.label}</div>
-        ${cfg.title ? `<div class="ca-title ca-title-race">${cfg.title}</div>` : ''}
-        <div class="ca-cands">${rows}</div>
-        <div class="ca-meta">
-          <span class="ca-in">${r.pctIn.toFixed(0)}% expected vote in</span>
-          <span class="ca-verdict">${r.call ? `PROJECTED WINNER · ${r.call.source}` : ''}</span>
-          ${r.singleSourced ? '<span class="ca-single" title="single source">NYT only</span>' : ''}
-        </div>
-      </article>`
+    const bar = field(row, 'prop.bar')
+    setVar(bar, '--y', m.yesPct)
+    setVar(bar, '--t', m.threshold)
+    setAttr(bar, 'data-threshold', m.threshold > 50 ? 'supermajority' : null)
+
+    // Passes / Fails come only from a call, never from the current Yes share.
+    const status = field(row, 'prop.status')
+    if (!status) return
+    const html = m.result === 'pass' ? '<span class="lbl tag-pass">✓ Passes</span>'
+      : m.result === 'fail' ? '<span class="lbl tag-fail">✕ Fails</span>'
+      : `<span class="gl" data-status="counting" data-party="N" style="--size:22px;--p:${m.pctIn}"></span>`
+        + `<span class="fig" style="font-size:24px;color:var(--ink-2)">${pct0(m.pctIn)} in</span>`
+    if (status.innerHTML !== html) status.innerHTML = html
   },
 
   update () {
-    if (!this.el) return
-    const store = this.store
-    const pages = Math.ceil(CALIFORNIA_RACES.length / PER_PAGE)
-    const slice = CALIFORNIA_RACES.slice(this.page * PER_PAGE, (this.page + 1) * PER_PAGE)
-
-    this.el.grid.innerHTML = slice.map(cfg => {
-      const r = store.getRace(cfg.key)
-      if (!r || !r.candidates.length) {
-        return `<article class="ca-card is-waiting" data-key="${cfg.key}">
-                  <div class="ca-label">${cfg.label}</div>
-                  <div class="ca-waiting">Waiting for first results</div>
-                </article>`
-      }
-      return cfg.kind === 'prop' ? this.cardProp(cfg, r) : this.cardRace(cfg, r)
-    }).join('')
-
-    this.el.pager.textContent = pages > 1 ? `${this.page + 1} / ${pages}` : ''
-
-    const f = freshness(store, 'civicCA')
-    this.el.fresh.textContent = f.text
-    this.el.fresh.dataset.state = f.state
+    if (!this.root) return
+    const data = californiaData(this.store)
+    this.raceBlocks.forEach((block, i) => {
+      const r = data.races[i]
+      show(block, !!r)
+      if (r) this.fillRace(block, r)
+    })
+    this.propRows.forEach((row, i) => {
+      const m = data.measures[i]
+      show(row, !!m)
+      if (m) this.fillProp(row, m)
+    })
   },
 }

@@ -1,0 +1,154 @@
+/* =====================================================================
+   Election Night 2026 — shared design system
+   Studio grey ground · Barlow Condensed (figures, labels) · Barlow (names, text)
+   Every view is a fixed 1920×1080 stage, scaled to fit the screen.
+   ===================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&display=swap");
+
+:root {
+  /* Ground and neutrals */
+  --ground:   #2c2f35;   /* page background */
+  --rule:     #42464e;   /* hairlines between rows */
+  --track:    #4a4f58;   /* empty ring track, undecided seats, no-vote dashes */
+  --ink:      #ffffff;   /* primary text */
+  --ink-2:    #d3d6db;   /* secondary text, trailing candidate */
+  --muted:    #a6abb4;   /* labels, captions */
+
+  /* Party: fills (shapes) and inks (text on the ground) */
+  --dem:      #3d7bff;
+  --dem-ink:  #9dbaff;
+  --dem-dim:  #334f8a;   /* Senate holdover seats */
+  --dem-faint:#304268;   /* map: not up, held by Dem */
+  --gop:      #ff4d42;
+  --gop-ink:  #ffa199;
+  --gop-dim:  #843c3a;
+  --gop-faint:#613738;
+  --ind:      #b08cff;
+  --ind-ink:  #cdb6ff;
+  --non:      #d3d6db;   /* nonpartisan candidate bar */
+
+  /* Signals */
+  --gold:     #f5b700;   /* changed hands. Ring, outline or tag only, never a seat fill */
+  --yes:      #ece6d6;   /* proposition Yes (solid). No is an outline. */
+
+  /* Ticker (light bar on the dark ground) */
+  --ticker:        #f5f6f8;
+  --ticker-ink:    #212328;
+  --ticker-ink-2:  #3a3e45;
+  --ticker-muted:  #5d626b;
+  --ticker-dem:    #1f5ae0;
+  --ticker-gop:    #d42d22;
+
+  /* Type */
+  --f-fig: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-ui:  "Barlow", "Helvetica Neue", Arial, sans-serif;
+
+  /* Layout */
+  --safe: 48px;          /* TV-safe margin. Nothing essential inside it. */
+}
+
+/* ---------- Stage: fixed 1920×1080, scaled and letterboxed by fit.js ---------- */
+html, body { margin: 0; height: 100%; background: #1f2125; overflow: hidden; }
+.stage {
+  position: absolute; left: 50%; top: 50%;
+  width: 1920px; height: 1080px;
+  transform: translate(-50%, -50%) scale(var(--scale, 1));
+  transform-origin: center;
+  overflow: hidden;
+  background: var(--ground); color: var(--ink);
+  font-family: var(--f-ui);
+}
+.stage * { box-sizing: border-box; }
+.stage text { font-family: var(--f-fig); }
+
+/* ---------- Type ---------- */
+.fig  { font-family: var(--f-fig); font-weight: 700; font-variant-numeric: tabular-nums; line-height: .9; }
+.lbl  { font-family: var(--f-fig); font-size: 20px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.ttl  { font-family: var(--f-fig); font-size: 60px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; line-height: .9; }
+.off  { font-family: var(--f-fig); font-size: 24px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.sec  { font-family: var(--f-fig); font-size: 22px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
+.cap  { font-size: 18px; color: var(--muted); }
+
+/* Party ink for text, driven by data-party on the element or an ancestor */
+[data-party="D"] { --c: var(--dem); --ci: var(--dem-ink); }
+[data-party="R"] { --c: var(--gop); --ci: var(--gop-ink); }
+[data-party="I"] { --c: var(--ind); --ci: var(--ind-ink); }
+[data-party="N"] { --c: var(--non); --ci: var(--ink-2); }
+.pink { color: var(--ci, var(--ink-2)); }
+
+/* ---------- Header ---------- */
+.hdr { position: absolute; left: var(--safe); top: var(--safe); display: flex; flex-direction: column; gap: 12px; }
+
+/* ---------- Race glyph ----------
+   <span class="gl" data-status="..." data-party="D|R|I|N" style="--p:62">
+   data-status: none · counting · called · gain · notup
+   --p is % expected in (drives the ring fill when counting).                    */
+.gl { position: relative; flex: none; display: flex; align-items: center; justify-content: center;
+      width: var(--size, 40px); height: var(--size, 40px); border-radius: 50%; }
+.gl::before { content: ""; position: absolute; inset: 0; border-radius: 50%; }
+.gl > * { position: relative; }
+.gl[data-status="none"]::before     { border: 2px dashed var(--track); }
+.gl[data-status="counting"]::before { background: conic-gradient(var(--c) calc(var(--p, 0) * 1%), var(--track) 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+          mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px)); }
+.gl[data-status="called"]::before   { background: var(--c); }
+.gl[data-status="gain"]::before     { background: var(--c); box-shadow: 0 0 0 3px var(--ground), 0 0 0 6px var(--gold); }
+.gl[data-status="notup"]::before    { inset: 22%; background: var(--hold, var(--track)); }
+.gl .chk { display: none; }
+.gl[data-status="called"] .chk, .gl[data-status="gain"] .chk { display: block; }
+.gl .abbr { font-family: var(--f-fig); font-weight: 700; font-size: 19px; color: var(--ink); }
+.gl[data-status="none"] .abbr  { color: var(--ink-2); }
+.gl[data-status="notup"] .abbr { color: var(--muted); font-size: 15px; }
+
+/* ---------- Tags ---------- */
+.gain { display: inline-block; padding: 2px 8px; border-radius: 4px; box-shadow: inset 0 0 0 2px var(--gold); color: var(--gold);
+        font-family: var(--f-fig); font-size: 18px; font-weight: 700; letter-spacing: .14em; line-height: 1.1; text-transform: uppercase; }
+.tag-pass { padding: 3px 12px; border-radius: 4px; background: var(--yes); color: #212328; }
+.tag-fail { padding: 3px 12px; border-radius: 4px; box-shadow: inset 0 0 0 2px var(--ink-2); color: var(--ink); }
+
+/* ---------- Bars ---------- */
+/* Two-candidate share bar: <div class="share" style="--a:52"><i data-party="D"></i><i data-party="R"></i></div> */
+.share { display: flex; gap: 3px; height: 5px; }
+.share i { border-radius: 3px; background: var(--c); }
+.share i:first-child { width: calc(var(--a) * 1%); }
+.share i:last-child { flex: 1; opacity: .45; }
+.share[data-pending] i { background: var(--track); opacity: 1; }
+
+/* Candidate bar (California): solid for the leader; striped if the second candidate shares the first's party */
+.cbar { height: 100%; border-radius: 3px; background: var(--c); width: calc(var(--pct) * 1%); }
+.cbar[data-style="trail"] { opacity: .45; }
+.cbar[data-style="same"]  { background: repeating-linear-gradient(135deg, var(--c) 0 4px, transparent 4px 8px); box-shadow: inset 0 0 0 2px var(--c); }
+
+/* Yes/No bar: <div class="yn" style="--y:54.2;--t:50"> · --t is the pass threshold (50 or 66.7) */
+.yn { position: relative; display: flex; gap: 3px; height: 14px; }
+.yn .y { width: calc(var(--y) * 1%); background: var(--yes); border-radius: 3px; }
+.yn .n { flex: 1; border-radius: 3px; box-shadow: inset 0 0 0 2px var(--ink-2); }
+.yn .t { position: absolute; left: calc(var(--t, 50) * 1%); top: -9px; bottom: -9px; width: 2px; margin-left: -1px; background: var(--ink); }
+.yn[data-threshold="supermajority"] .t { width: 3px; background: var(--gold); }
+
+/* ---------- Freshness ---------- */
+.fresh { display: flex; align-items: center; gap: 10px; font-family: var(--f-fig); font-size: 22px; font-weight: 600;
+         letter-spacing: .06em; color: var(--muted); font-variant-numeric: tabular-nums; text-transform: uppercase; }
+.fresh i { width: 12px; height: 12px; border-radius: 50%; background: var(--ink-2); display: block; }
+.fresh[data-stale] i { background: transparent; box-shadow: inset 0 0 0 2px var(--muted); }
+
+/* ---------- Ticker ---------- */
+.tk { position: absolute; left: var(--safe); top: 960px; width: 1824px; height: 72px; background: var(--ticker);
+      border-radius: 6px; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,.28);
+      display: flex; align-items: center; gap: 32px; padding: 0 28px 0 14px; white-space: nowrap; }
+.tk-prog  { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--ticker-ink); opacity: .2; width: calc(var(--progress, 0) * 1%); }
+.tk-clock { flex: none; background: var(--gold); color: var(--ticker-ink); font-family: var(--f-fig); font-weight: 700; font-size: 26px;
+            padding: 3px 12px; border-radius: 4px; font-variant-numeric: tabular-nums; }
+.tk-calls { flex: 1; min-width: 0; display: flex; align-items: center; gap: 34px; overflow: hidden;
+            font-family: var(--f-fig); font-size: 26px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.tk-calls b { color: var(--ticker-ink); font-weight: 700; margin-right: 8px; }
+.tk-calls [data-party="D"] { color: var(--ticker-dem); }
+.tk-calls [data-party="R"] { color: var(--ticker-gop); }
+.tk-calls [data-party="I"], .tk-calls [data-party="N"] { color: var(--ticker-ink-2); }
+.tk-calls .gain { background: var(--gold); box-shadow: none; color: var(--ticker-ink); margin-left: 4px; }
+.tk-right { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.tk-next  { font-family: var(--f-fig); font-size: 22px; font-weight: 600; letter-spacing: .12em; color: var(--ticker-ink-2); text-transform: uppercase; }
+.tk-src   { font-size: 18px; color: var(--ticker-muted); }
+
+@media (prefers-reduced-motion: reduce) { .stage * { transition: none !important; animation: none !important; } }

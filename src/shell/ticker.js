@@ -1,79 +1,98 @@
-// The bar along the bottom of every view: ET clock, the latest calls across
-// all offices, and an honest statement of where the numbers came from.
+// The ticker and the per-view freshness indicator.
 //
-// Markup carries data-field hooks so the designer's HTML can replace it
-// without the data layer changing.
+// Both live in the designer's markup; this only fills them.
 
 import { nytHealthy } from '../model/calls.js'
-import { ago } from '../util.js'
+import { callLine } from '../render/adapt.js'
+import { capture, repeat, field, fields, setText, setAttr, setVar, setFlag } from '../render/dom.js'
+import { STALE_AFTER_MS, NO_CHANGE_AFTER_MS } from '../../config/views.js'
+import { nowMs } from '../util.js'
 
-const PARTY_LABEL = { D: 'DEM', R: 'REP', I: 'IND', O: 'OTH' }
-
-export function createTicker (rootEl, store) {
-  rootEl.innerHTML = `
-    <div class="ticker">
-      <div class="ticker-clock" data-field="shell.clock">--:--</div>
-      <div class="ticker-calls" data-field="shell.calls"></div>
-      <div class="ticker-source" data-field="shell.source"></div>
-    </div>`
-
-  const clockEl = rootEl.querySelector('[data-field="shell.clock"]')
-  const callsEl = rootEl.querySelector('[data-field="shell.calls"]')
-  const srcEl = rootEl.querySelector('[data-field="shell.source"]')
+export function createTicker (store) {
+  const root = document
+  const calls = capture(root, 'shell.call')
+  const clockEl = field(root, 'shell.clock')
+  const srcEl = root.querySelector('.tk-src')
 
   function drawClock () {
-    clockEl.textContent = new Intl.DateTimeFormat('en-US', {
-      timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hourCycle: 'h23',
-    }).format(new Date()) + ' ET'
+    setText(clockEl, new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit',
+    }).format(new Date()) + ' ET')
   }
 
   function drawCalls () {
-    const calls = store.latestCalls(12)
-    if (!calls.length) {
-      callsEl.innerHTML = '<span class="ticker-empty">Waiting for first results</span>'
-      return
-    }
-    callsEl.innerHTML = calls.map(r => {
-      const p = r.call.party
-      const gain = r.flipped ? '<span class="tag-gain">GAIN</span>' : ''
-      const label = r.label || r.key
-      const who = r.kind === 'prop' ? r.call.winner.toUpperCase() : r.call.name
-      return `<span class="ticker-item" data-template="call" data-party="${p || 'O'}">
-        <b>${label}</b> ${who} ${p ? `<i>${PARTY_LABEL[p] || p}</i>` : ''} ${gain}
-      </span>`
-    }).join('')
+    // Newest first, across all offices. Overflow is clipped by the design.
+    const list = store.latestCalls(12).map(callLine)
+    repeat(calls, list.length, (el, i) => {
+      const c = list[i]
+      setAttr(el, 'data-party', c.party)
+      setText(field(el, 'call.race'), c.race)
+      setText(field(el, 'call.result'), c.result)
+      let tag = el.querySelector('.gain')
+      if (c.gain && !tag) {
+        tag = document.createElement('span')
+        tag.className = 'gain'
+        tag.textContent = 'Gain'
+        el.appendChild(tag)
+      } else if (!c.gain && tag) tag.remove()
+    })
   }
 
-  // Say which source is actually in use, and change it when NYT drops out.
+  // Always say which source is actually in use, and change it when NYT drops.
   function drawSource () {
+    if (!srcEl) return
     const h = store.allHealth()
-    // Any healthy NYT file means AP is still the call authority somewhere.
-    const calls = nytHealthy(h) ? 'AP via NYT' : 'civicAPI'
-    const down = Object.entries(h).filter(([, v]) => !v.ok).map(([k]) => k)
     const civicOk = (h.civicHouse && h.civicHouse.ok) || (h.civicSenate && h.civicSenate.ok)
-    const votes = civicOk ? 'civicAPI' : 'NYT'
-    srcEl.innerHTML =
-      `<span data-field="shell.source.calls">Calls: ${calls}</span> · ` +
-      `<span data-field="shell.source.votes">Votes: ${votes}</span>` +
-      (down.length ? ` · <span class="feed-down">${down.length} feed${down.length > 1 ? 's' : ''} down</span>` : '') +
-      (store.isTestData() ? ' · <span class="tag-test">TEST DATA</span>' : '')
+    setText(srcEl,
+      `Calls: ${nytHealthy(h) ? 'AP via NYT' : 'civicAPI'} · Votes: ${civicOk ? 'civicAPI' : 'NYT'}`
+      + (store.isTestData() ? ' · TEST DATA' : ''))
   }
 
-  function draw () { drawClock(); drawCalls(); drawSource() }
+  /**
+   * Freshness, per SHELL.md. Stale must never read as an error to the room —
+   * no red, no motion. It is for the operator, and it names the stalled source
+   * when that is known.
+   */
+  function drawFreshness () {
+    const h = store.allHealth()
+    const entries = Object.entries(h)
+    const lastOk = Math.max(0, ...entries.map(([, v]) => v.lastOk || 0))
+    const lastChange = Math.max(0, ...entries.map(([, v]) => v.lastChange || 0))
+    const now = nowMs()
+    const noFetch = !lastOk || now - lastOk > STALE_AFTER_MS
+    const noChange = lastChange && now - lastChange > NO_CHANGE_AFTER_MS
+    const stale = noFetch || noChange
+
+    const down = entries.filter(([, v]) => !v.ok).map(([k]) => k)
+    const source = down.length === 1 ? down[0] : down.length ? `${down.length} feeds` : 'civicAPI'
+
+    const secs = lastOk ? Math.round((now - lastOk) / 1000) : null
+    const text = stale
+      ? (noFetch
+        ? `No update ${secs == null ? 'yet' : fmt(secs)} · ${source}`
+        : `Last change ${fmt(Math.round((now - lastChange) / 1000))} · ${source}`)
+      : `Updated ${fmt(secs)} ago`
+
+    for (const el of fields(root, 'shell.updated')) setFlag(el, 'data-stale', stale)
+    for (const el of fields(root, 'shell.updatedText')) setText(el, text)
+  }
+
+  const fmt = s => (s < 90 ? `${s} s` : s < 5400 ? `${Math.round(s / 60)} min` : `${Math.round(s / 3600)} h`)
+
+  function draw () { drawClock(); drawCalls(); drawSource(); drawFreshness() }
 
   draw()
   store.subscribe(draw)
-  setInterval(drawClock, 10e3)
+  setInterval(() => { drawClock(); drawFreshness() }, 1000)
 
-  return { draw }
-}
-
-// Small freshness mark per view. Must read as context to the room and as a
-// warning only to the operator — never as an error on the TV.
-export function freshness (store, sourceName) {
-  const h = store.getHealth(sourceName)
-  if (!h) return { text: 'no data', state: 'stale' }
-  if (!h.ok) return { text: `${sourceName} unreachable`, state: 'down' }
-  const age = Date.now() - (h.lastOk || 0)
-  return { text: `updated ${ago(h.lastOk)}`, state: age > 5 * 60e3 ? 'stale' : 'ok' }
+  return {
+    draw,
+    // Rotation labels and the progress hairline.
+    setRotation (s) {
+      setText(field(root, 'shell.view'), s.currentTitle || '')
+      setText(field(root, 'shell.next'), s.paused ? 'Paused' : s.pinned ? 'Pinned' : (s.nextTitle || ''))
+      setText(field(root, 'shell.nextIn'), s.paused || s.pinned ? '' : s.countdown)
+      setVar(field(root, 'shell.progress'), '--progress', s.progress.toFixed(1))
+    },
+  }
 }

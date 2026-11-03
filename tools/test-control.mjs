@@ -11,10 +11,17 @@ const ctx = await browser.newContext({ viewport: { width: 1600, height: 1000 } }
 
 const tv = await ctx.newPage()
 const control = await ctx.newPage()
-const errs = []
+const errs = [], feedNoise = []
+// civicAPI drops its CORS header on error responses, so an overloaded 503
+// reaches the browser as a CORS or ERR_FAILED message. The sources retry and
+// fall back; it is not a failure of this page.
+const isFeedNoise = t => /civicapi\.org|static01\.nyt\.com|ERR_FAILED|Failed to load resource/.test(t)
 for (const [name, p] of [['tv', tv], ['control', control]]) {
   p.on('pageerror', e => errs.push(`${name} PAGEERROR: ${e.message}`))
-  p.on('console', m => { if (m.type() === 'error') errs.push(`${name}: ${m.text()}`) })
+  p.on('console', m => {
+    if (m.type() !== 'error') return
+    ;(isFeedNoise(m.text()) ? feedNoise : errs).push(`${name}: ${m.text()}`)
+  })
 }
 
 await tv.goto('http://localhost:8000/', { waitUntil: 'load' })
@@ -84,12 +91,17 @@ ok('manual call applies on the TV', call && call.winner === 'yes' && call.source
 // a view coming back after time off screen must not show stale content.
 await control.click('[data-pin="california"]')
 await tv.waitForTimeout(1200)
-const onScreen = await tv.evaluate(() => document.querySelector('[data-key="CA-PROP-40"]')?.dataset.propStatus)
-ok('a view rotating in shows the call at once (PASSES, not passing)', onScreen === 'passes', String(onScreen))
+const onScreen = await tv.evaluate(() => {
+  const rows = [...document.querySelectorAll('[data-template="ca.prop"]')]
+  const row = rows.find(r => r.querySelector('[data-field="prop.number"]')?.textContent === 'Prop 40')
+  return { result: row?.getAttribute('data-result'), status: row?.querySelector('[data-field="prop.status"]')?.textContent.trim() }
+})
+ok('a view rotating in shows the call at once (Passes, not merely leading)',
+  onScreen.result === 'pass' && /Passes/.test(onScreen.status || ''), JSON.stringify(onScreen))
 await control.click('#unpin')
 
 const ticker = await tv.textContent('[data-field="shell.calls"]')
-ok('the call reaches the ticker', /PROP 40/i.test(ticker), ticker.replace(/\s+/g, ' ').slice(0, 120))
+ok('the call reaches the ticker', /Prop 40/i.test(ticker), ticker.replace(/\s+/g, ' ').slice(0, 120))
 
 // ---- withdrawing it ----
 await control.fill('#manual', '-CA-PROP-40')
@@ -98,7 +110,7 @@ await tv.waitForTimeout(1200)
 ok('withdrawing the manual call clears it',
   await tv.evaluate(() => !window.store.getRace('CA-PROP-40').call))
 
-console.log(`\n  console errors: ${errs.length}`)
+console.log(`\n  console errors: ${errs.length}  (upstream feed noise, retried: ${feedNoise.length})`)
 errs.slice(0, 5).forEach(e => console.log('   ' + e.slice(0, 200)))
 console.log(`\n${pass} passed, ${fail} failed\n`)
 

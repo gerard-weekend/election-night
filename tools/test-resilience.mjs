@@ -54,11 +54,11 @@ console.log('\n--- 3. civicAPI calls take over when NYT is broken ---')
   })
   ok("civicAPI's own call is used once NYT is stale", took === 'civic', String(took))
 
-  const credit = await p.textContent('[data-field="shell.source"]')
+  const credit = await p.textContent('.tk-src')
   ok('the ticker credits civicAPI for calls during the outage', /Calls: civicAPI/.test(credit),
     credit.replace(/\s+/g, ' ').trim())
 
-  const blank = await p.evaluate(() => !document.querySelector('.view.is-active')?.textContent.trim())
+  const blank = await p.evaluate(() => !document.querySelector('.stage.is-active')?.textContent.trim())
   ok('the screen is not blank while NYT is down', !blank)
   await p.close()
 }
@@ -85,7 +85,7 @@ console.log('\n--- 4. survives a network drop without blanking ---')
 
   const during = await p.evaluate(() => ({
     calls: window.store.latestCalls(40).length,
-    text: (document.querySelector('.view.is-active')?.textContent || '').trim().length,
+    text: (document.querySelector('.stage.is-active')?.textContent || '').trim().length,
     failing: Object.values(window.store.allHealth()).filter(h => !h.ok).length,
     stale: window.store.all().filter(r => r.stale).length,
   }))

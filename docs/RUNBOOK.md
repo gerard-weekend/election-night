@@ -44,7 +44,7 @@ Before guests arrive:
 
 ## 2. What's on screen
 
-Rotation is House 60 s → Senate 45 s → California 45 s, then round again.
+Rotation is House → Senate → California, 60 s each, then round again.
 
 The ticker along the bottom carries the ET clock, the latest calls across all
 three offices newest-first, and an honest source credit. It reads
@@ -96,7 +96,7 @@ applied as soon as the race appears — it is not lost.
 ### Keyboard, on the TV page itself
 
 Only needed if the control window is shut: `Space` pause, `←` / `→` previous
-and next, `1`–`3` pin a view, `0` unpin.
+and next, `1`–`3` pin a view, `0` unpin, `R` force a refresh, `F` full screen.
 
 ---
 
@@ -153,6 +153,10 @@ stale cache" only as a last resort — it discards your manual calls too.
 - **Rotation timings:** `config/views.js`.
 
 Edit, save, press "Reload TV". There is no build step.
+
+`index.html` is **generated** from the designer's pages in `docs/design/` by
+`node tools/build-index.mjs`. Do not hand-edit it — change the design files and
+re-run the generator, so a new design bundle can be dropped in whole.
 
 ---
 

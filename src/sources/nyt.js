@@ -11,6 +11,15 @@ import { CALIFORNIA_RACES } from '../../config/california.js'
 import { seatId } from './civic.js'
 import { SEAT_HOLDERS } from '../../config/senate.js'
 
+// Poll scheduling. Keeping the handles lets a manual refresh (the R key)
+// replace the pending poll rather than run alongside it, which would otherwise
+// double the request rate every time it is pressed.
+const timers = new Map()
+function schedule (fn, ms) {
+  clearTimeout(timers.get(fn))
+  timers.set(fn, setTimeout(fn, ms))
+}
+
 const BASE = 'https://static01.nyt.com/elections-assets/pages/data/2026-11-03'
 const EVERY = 45e3
 
@@ -91,7 +100,7 @@ async function pollHouse () {
     markOk('nytHouse')
   } catch (e) { markFail('nytHouse', e) }
   store.commit(changed)
-  setTimeout(pollHouse, EVERY)
+  schedule(pollHouse, EVERY)
 }
 
 // --------------------------------------------------------------- Senate ----
@@ -125,7 +134,7 @@ async function pollSenate () {
     markOk('nytSenate')
   } catch (e) { markFail('nytSenate', e) }
   store.commit(changed)
-  setTimeout(pollSenate, EVERY)
+  schedule(pollSenate, EVERY)
 }
 
 // ----------------------------------------------------------- California ----
@@ -158,7 +167,7 @@ async function pollCalifornia () {
     markOk('nytCA')
   } catch (e) { markFail('nytCA', e) }
   store.commit(changed)
-  setTimeout(pollCalifornia, EVERY)
+  schedule(pollCalifornia, EVERY)
 }
 
 export function start () {
@@ -166,4 +175,11 @@ export function start () {
   pollHouse()
   setTimeout(pollSenate, 15e3)
   setTimeout(pollCalifornia, 30e3)
+}
+
+/** Force every poll to run now, replacing whatever was pending. */
+export function refresh () {
+  pollHouse()
+  pollSenate()
+  pollCalifornia()
 }

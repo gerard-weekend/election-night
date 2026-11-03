@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>California</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+.sec { height: 40px; display: flex; align-items: flex-start; }
+.blk { border-top: 1px solid var(--rule); padding-top: 14px; display: flex; flex-direction: column; }
+.blk-head { display: flex; justify-content: space-between; align-items: center; height: 30px; white-space: nowrap; }
+.sub { font-family: var(--f-ui); font-size: 18px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--muted); margin-left: 12px; }
+.cand { display: flex; align-items: center; gap: 16px; }
+.prow { display: flex; align-items: center; gap: 14px; height: 76px; border-top: 1px solid var(--rule); white-space: nowrap; }
+.gl .chk { width: auto; }
+</style>
+</head>
+<body>
+<main class="stage" data-view="california">
+<header class="hdr" style="flex-direction:row;align-items:flex-end;gap:32px">
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div class="lbl">Midterms 2026 · Live results</div>
+    <div class="ttl">California</div>
+  </div>
+  <div style="font-size:22px;color:var(--ink-2);padding-bottom:2px">Mail ballots are counted for weeks. Tonight’s leads are early and often shift.</div>
+</header>
+<div style="position:absolute;right:48px;top:96px"><div class="fresh" data-field="shell.updated" data-stale><i></i><span data-field="shell.updatedText">Last change 7 min · civicAPI</span></div></div>
+
+<!-- Races: 2 statewide (Governor large), 2 local -->
+<section style="position:absolute;left:48px;top:176px;width:680px;display:flex;flex-direction:column" data-field="ca.races">
+  <div class="sec">Statewide</div>
+  <div class="blk" data-template="ca.race" style="height:214px;gap:12px">
+    <div class="blk-head">
+      <span class="off" data-field="race.office">Governor</span>
+      <span style="display:flex;align-items:center;gap:10px">
+        <span class="gl" data-field="race.glyph" data-status="called" data-party="D" style="--size:28px;--p:41"><svg class="chk" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+        <span class="fig" data-field="race.status" style="font-size:24px;color:var(--ink-2);letter-spacing:.04em">Projected · AP</span>
+      </span>
+    </div>
+    <div class="cand" data-template="race.candidate" data-party="D" style="height:62px">
+      <span style="width:230px;flex:none;white-space:nowrap"><span data-field="cand.name" style="font-size:32px;font-weight:600;color:var(--ink)">Arguello</span><span class="fig pink" data-field="cand.party" style="font-size:20px;margin-left:8px">D</span></span>
+      <div style="flex:1;min-width:0;height:14px"><div class="cbar" data-field="cand.bar" data-style="lead" style="--pct:57.2"></div></div>
+      <span class="fig" data-field="cand.pct" style="width:110px;text-align:right;font-size:64px;color:var(--ink)">57.2</span>
+    </div>
+    <div class="cand" data-template="race.candidate" data-party="R" style="height:62px">
+      <span style="width:230px;flex:none;white-space:nowrap"><span data-field="cand.name" style="font-size:32px;font-weight:500;color:var(--ink-2)">Brennan</span><span class="fig pink" data-field="cand.party" style="font-size:20px;margin-left:8px">R</span></span>
+      <div style="flex:1;min-width:0;height:14px"><div class="cbar" data-field="cand.bar" data-style="trail" style="--pct:40.6"></div></div>
+      <span class="fig" data-field="cand.pct" style="width:110px;text-align:right;font-size:64px;color:var(--ink-2)">40.6</span>
+    </div>
+  </div>
+  <div class="blk" data-template="ca.race" style="height:154px;gap:8px">
+    <div class="blk-head">
+      <span class="off" data-field="race.office">Attorney General</span>
+      <span style="display:flex;align-items:center;gap:10px">
+        <span class="gl" data-field="race.glyph" data-status="called" data-party="D" style="--size:28px;--p:41"><svg class="chk" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+        <span class="fig" data-field="race.status" style="font-size:24px;color:var(--ink-2);letter-spacing:.04em">Projected · AP</span>
+      </span>
+    </div>
+    <div class="cand" data-template="race.candidate" data-party="D" style="height:44px">
+      <span style="width:200px;flex:none;white-space:nowrap"><span data-field="cand.name" style="font-size:26px;font-weight:600;color:var(--ink)">Ferreira</span><span class="fig pink" data-field="cand.party" style="font-size:20px;margin-left:8px">D</span></span>
+      <div style="flex:1;min-width:0;height:10px"><div class="cbar" data-field="cand.bar" data-style="lead" style="--pct:59.0"></div></div>
+      <span class="fig" data-field="cand.pct" style="width:76px;text-align:right;font-size:40px;color:var(--ink)">59.0</span>
+    </div>
+    <div class="cand" data-template="race.candidate" data-party="R" style="height:44px">
+      <span style="width:200px;flex:none;white-space:nowrap"><span data-field="cand.name" style="font-size:26px;font-weight:500;color:var(--ink-2)">Holt</span><span class="fig pink" data-field="cand.party" style="font-size:20px;margin-left:8px">R</span></span>
+      <div style="flex:1;min-width:0;height:10px"><div class="cbar" data-field="cand.bar" data-style="trail" style="--pct:41.0"></div></div>
+      <span class="fig" data-field="cand.pct" style="width:76px;text-align:right;font-size:40px;color:var(--ink-2)">41.0</span>
+    </div>
+  </div>
+  <div class="sec" style="margin-top:12px">Local</div>
+  <div class="blk" data-template="ca.race" style="height:154px;gap:8px">
+    <div class="blk-head">
+      <span class="off" data-field="race.office">Oakland Mayor<span class="sub">Nonpartisan</span></span>
+      <span style="display:flex;align-items:center;gap:10px">
+        <span class="gl" data-field="race.glyph" data-status="counting" data-party="N" style="--size:28px;--p:39"><svg class="chk" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+        <span class="fig" data-field="race.status" style="font-size:24px;color:var(--ink-2);letter-spacing:.04em">39% in</span><span class="lbl tag-fail" data-field="race.leadChanged" style="font-size:16px;padding:2px 8px;margin-left:4px">Lead changed</span>
+      </span>
+    </div>
+    <div class="cand" data-template="race.candidate" data-party="N" style="height:44px">
+      <span style="width:200px;flex:none;white-space:nowrap"><span data-field="cand.name" style="font-size:26px;font-weight:600;color:var(--ink)">Bellamy</span><span class="fig pink" data-field="cand.party" style="font-size:20px;margin-left:8px"></span></span>
+      <div style="flex:1;min-width:0;height:10px"><div class="cbar" data-field="cand.bar" data-style="lead" style="--pct:50.4"></div></div>
+      <span class="fig" data-field="cand.pct" style="width:76px;text-align:right;font-size:40px;color:var(--ink)">50.4</span>
+    </div>
+    <div class="cand" data-template="race.candidate" data-party="N" style="height:44px">
+      <span style="width:200px;flex:none;white-space:nowrap"><span data-field="cand.name" style="font-size:26px;font-weight:500;color:var(--ink-2)">Okonkwo</span><span class="fig pink" data-field="cand.party" style="font-size:20px;margin-left:8px"></span></span>
+      <div style="flex:1;min-width:0;height:10px"><div class="cbar" data-field="cand.bar" data-style="same" style="--pct:49.6"></div></div>
+      <span class="fig" data-field="cand.pct" style="width:76px;text-align:right;font-size:40px;color:var(--ink-2)">49.6</span>
+    </div>
+  </div>
+  <div class="blk" data-template="ca.race" style="height:154px;gap:8px">
+    <div class="blk-head">
+      <span class="off" data-field="race.office">CA-12 · U.S. House<span class="sub">Top-two · D vs D</span></span>
+      <span style="display:flex;align-items:center;gap:10px">
+        <span class="gl" data-field="race.glyph" data-status="called" data-party="D" style="--size:28px;--p:44"><svg class="chk" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+        <span class="fig" data-field="race.status" style="font-size:24px;color:var(--ink-2);letter-spacing:.04em">Projected · AP</span>
+      </span>
+    </div>
+    <div class="cand" data-template="race.candidate" data-party="D" style="height:44px">
+      <span style="width:200px;flex:none;white-space:nowrap"><span data-field="cand.name" style="font-size:26px;font-weight:600;color:var(--ink)">Tran</span><span class="fig pink" data-field="cand.party" style="font-size:20px;margin-left:8px">D</span></span>
+      <div style="flex:1;min-width:0;height:10px"><div class="cbar" data-field="cand.bar" data-style="lead" style="--pct:58.3"></div></div>
+      <span class="fig" data-field="cand.pct" style="width:76px;text-align:right;font-size:40px;color:var(--ink)">58.3</span>
+    </div>
+    <div class="cand" data-template="race.candidate" data-party="D" style="height:44px">
+      <span style="width:200px;flex:none;white-space:nowrap"><span data-field="cand.name" style="font-size:26px;font-weight:500;color:var(--ink-2)">Hollister</span><span class="fig pink" data-field="cand.party" style="font-size:20px;margin-left:8px">D</span></span>
+      <div style="flex:1;min-width:0;height:10px"><div class="cbar" data-field="cand.bar" data-style="same" style="--pct:41.7"></div></div>
+      <span class="fig" data-field="cand.pct" style="width:76px;text-align:right;font-size:40px;color:var(--ink-2)">41.7</span>
+    </div>
+  </div>
+</section>
+
+<!-- Measures: 6 statewide, 2 local, one line each -->
+<section style="position:absolute;left:800px;top:176px;width:1072px;display:flex;flex-direction:column" data-field="ca.props">
+  <div class="sec" style="justify-content:space-between"><span>Statewide propositions</span><span class="lbl" style="font-size:18px">Yes · No</span></div>
+    <div class="prow" data-template="ca.prop" data-result="pass">
+      <span class="fig" data-field="prop.number" style="width:132px;font-size:26px;letter-spacing:.04em">Prop 2</span>
+      <span data-field="prop.title" style="width:276px;font-size:23px;font-weight:500;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis">School facilities bond</span>
+      <span class="fig" data-field="prop.yes" style="width:76px;font-size:42px">55.6</span>
+      <div class="yn" data-field="prop.bar" style="flex:1;min-width:0;--y:55.6;--t:50"><i class="y"></i><i class="n"></i><i class="t"></i></div>
+      <span class="fig" data-field="prop.no" style="width:76px;text-align:right;font-size:42px;color:var(--ink-2)">44.4</span>
+      <span data-field="prop.status" style="width:152px;display:flex;justify-content:flex-end;align-items:center;gap:10px"><span class="lbl tag-pass">✓ Passes</span></span>
+    </div>
+    <div class="prow" data-template="ca.prop" data-result="counting">
+      <span class="fig" data-field="prop.number" style="width:132px;font-size:26px;letter-spacing:.04em">Prop 3</span>
+      <span data-field="prop.title" style="width:276px;font-size:23px;font-weight:500;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis">Rent control expansion</span>
+      <span class="fig" data-field="prop.yes" style="width:76px;font-size:42px">45.2</span>
+      <div class="yn" data-field="prop.bar" style="flex:1;min-width:0;--y:45.2;--t:50"><i class="y"></i><i class="n"></i><i class="t"></i></div>
+      <span class="fig" data-field="prop.no" style="width:76px;text-align:right;font-size:42px;color:var(--ink-2)">54.8</span>
+      <span data-field="prop.status" style="width:152px;display:flex;justify-content:flex-end;align-items:center;gap:10px"><span class="gl" data-status="counting" data-party="N" style="--size:26px;--p:41"></span><span class="fig" style="font-size:24px;color:var(--ink-2)">41% in</span></span>
+    </div>
+    <div class="prow" data-template="ca.prop" data-result="counting">
+      <span class="fig" data-field="prop.number" style="width:132px;font-size:26px;letter-spacing:.04em">Prop 4</span>
+      <span data-field="prop.title" style="width:276px;font-size:23px;font-weight:500;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis">Minimum wage to $20</span>
+      <span class="fig" data-field="prop.yes" style="width:76px;font-size:42px">50.4</span>
+      <div class="yn" data-field="prop.bar" style="flex:1;min-width:0;--y:50.4;--t:50"><i class="y"></i><i class="n"></i><i class="t"></i></div>
+      <span class="fig" data-field="prop.no" style="width:76px;text-align:right;font-size:42px;color:var(--ink-2)">49.6</span>
+      <span data-field="prop.status" style="width:152px;display:flex;justify-content:flex-end;align-items:center;gap:10px"><span class="gl" data-status="counting" data-party="N" style="--size:26px;--p:40"></span><span class="fig" style="font-size:24px;color:var(--ink-2)">40% in</span></span>
+    </div>
+    <div class="prow" data-template="ca.prop" data-result="counting">
+      <span class="fig" data-field="prop.number" style="width:132px;font-size:26px;letter-spacing:.04em">Prop 5</span>
+      <span data-field="prop.title" style="width:276px;font-size:23px;font-weight:500;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis">Local housing tax threshold</span>
+      <span class="fig" data-field="prop.yes" style="width:76px;font-size:42px">49.6</span>
+      <div class="yn" data-field="prop.bar" style="flex:1;min-width:0;--y:49.6;--t:50"><i class="y"></i><i class="n"></i><i class="t"></i></div>
+      <span class="fig" data-field="prop.no" style="width:76px;text-align:right;font-size:42px;color:var(--ink-2)">50.4</span>
+      <span data-field="prop.status" style="width:152px;display:flex;justify-content:flex-end;align-items:center;gap:10px"><span class="gl" data-status="counting" data-party="N" style="--size:26px;--p:41"></span><span class="fig" style="font-size:24px;color:var(--ink-2)">41% in</span></span>
+    </div>
+    <div class="prow" data-template="ca.prop" data-result="pass">
+      <span class="fig" data-field="prop.number" style="width:132px;font-size:26px;letter-spacing:.04em">Prop 6</span>
+      <span data-field="prop.title" style="width:276px;font-size:23px;font-weight:500;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis">Wildfire insurance reform</span>
+      <span class="fig" data-field="prop.yes" style="width:76px;font-size:42px">59.9</span>
+      <div class="yn" data-field="prop.bar" style="flex:1;min-width:0;--y:59.9;--t:50"><i class="y"></i><i class="n"></i><i class="t"></i></div>
+      <span class="fig" data-field="prop.no" style="width:76px;text-align:right;font-size:42px;color:var(--ink-2)">40.1</span>
+      <span data-field="prop.status" style="width:152px;display:flex;justify-content:flex-end;align-items:center;gap:10px"><span class="lbl tag-pass">✓ Passes</span></span>
+    </div>
+    <div class="prow" data-template="ca.prop" data-result="fail">
+      <span class="fig" data-field="prop.number" style="width:132px;font-size:26px;letter-spacing:.04em">Prop 7</span>
+      <span data-field="prop.title" style="width:276px;font-size:23px;font-weight:500;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis">Ranked-choice voting option</span>
+      <span class="fig" data-field="prop.yes" style="width:76px;font-size:42px">42.8</span>
+      <div class="yn" data-field="prop.bar" style="flex:1;min-width:0;--y:42.8;--t:50"><i class="y"></i><i class="n"></i><i class="t"></i></div>
+      <span class="fig" data-field="prop.no" style="width:76px;text-align:right;font-size:42px;color:var(--ink-2)">57.2</span>
+      <span data-field="prop.status" style="width:152px;display:flex;justify-content:flex-end;align-items:center;gap:10px"><span class="lbl tag-fail">✕ Fails</span></span>
+    </div>
+  <div class="sec" style="margin-top:22px;justify-content:space-between"><span>Local measures</span><span class="lbl" style="font-size:18px">Yes · No</span></div>
+    <div class="prow" data-template="ca.prop" data-result="counting">
+      <span class="fig" data-field="prop.number" style="width:132px;font-size:26px;letter-spacing:.04em">Oakland X</span>
+      <span data-field="prop.title" style="width:276px;font-size:23px;font-weight:500;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis">Library parcel tax · ⅔</span>
+      <span class="fig" data-field="prop.yes" style="width:76px;font-size:42px">66.1</span>
+      <div class="yn" data-field="prop.bar" data-threshold="supermajority" style="flex:1;min-width:0;--y:66.1;--t:66.7"><i class="y"></i><i class="n"></i><i class="t"></i></div>
+      <span class="fig" data-field="prop.no" style="width:76px;text-align:right;font-size:42px;color:var(--ink-2)">33.9</span>
+      <span data-field="prop.status" style="width:152px;display:flex;justify-content:flex-end;align-items:center;gap:10px"><span class="gl" data-status="counting" data-party="N" style="--size:26px;--p:39"></span><span class="fig" style="font-size:24px;color:var(--ink-2)">39% in</span></span>
+    </div>
+    <div class="prow" data-template="ca.prop" data-result="pass">
+      <span class="fig" data-field="prop.number" style="width:132px;font-size:26px;letter-spacing:.04em">SF Prop K</span>
+      <span data-field="prop.title" style="width:276px;font-size:23px;font-weight:500;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis">Great Highway park</span>
+      <span class="fig" data-field="prop.yes" style="width:76px;font-size:42px">54.8</span>
+      <div class="yn" data-field="prop.bar" style="flex:1;min-width:0;--y:54.8;--t:50"><i class="y"></i><i class="n"></i><i class="t"></i></div>
+      <span class="fig" data-field="prop.no" style="width:76px;text-align:right;font-size:42px;color:var(--ink-2)">45.2</span>
+      <span data-field="prop.status" style="width:152px;display:flex;justify-content:flex-end;align-items:center;gap:10px"><span class="lbl tag-pass">✓ Passes</span></span>
+    </div>
+  <div class="cap" style="margin-top:14px;display:flex;align-items:center;gap:10px"><i style="width:3px;height:18px;background:var(--gold);display:block"></i>Gold tick marks a two-thirds threshold; otherwise the tick sits at 50%.</div>
+</section>
+
+<footer class="tk" data-field="shell.ticker">
+  <div class="tk-prog" data-field="shell.progress" style="--progress:55"></div>
+  <span class="tk-clock" data-field="shell.clock">1:24 AM ET</span>
+  <div class="tk-calls" data-field="shell.calls">
+    <span data-template="shell.call" data-party="D"><b data-field="call.race">CA Gov</b><span data-field="call.result">Dem hold</span></span>
+    <span data-template="shell.call" data-party="D"><b data-field="call.race">CA-12</b><span data-field="call.result">Dem hold</span></span>
+    <span data-template="shell.call" data-party="N"><b data-field="call.race">CA Prop 7</b><span data-field="call.result">Fails</span></span>
+    <span data-template="shell.call" data-party="D"><b data-field="call.race">CA AG</b><span data-field="call.result">Dem hold</span></span>
+  </div>
+  <div class="tk-right">
+    <span class="tk-next" data-field="shell.rotation"><span data-field="shell.view">California</span> · Next: <span data-field="shell.next">House</span> <span data-field="shell.nextIn">0:41</span></span>
+    <span class="tk-src">Calls: AP via NYT · Votes: civicAPI</span>
+  </div>
+</footer>
+</main>
+<script src="fit.js"></script>
+</body>
+</html>

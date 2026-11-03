@@ -13,6 +13,15 @@ import { fetchJson } from './http.js'
 import { CALIFORNIA_RACES } from '../../config/california.js'
 import { SEAT_HOLDERS } from '../../config/senate.js'
 
+// Poll scheduling. Keeping the handles lets a manual refresh (the R key)
+// replace the pending poll rather than run alongside it, which would otherwise
+// double the request rate every time it is pressed.
+const timers = new Map()
+function schedule (fn, ms) {
+  clearTimeout(timers.get(fn))
+  timers.set(fn, setTimeout(fn, ms))
+}
+
 const BASE = 'https://civicapi.org/api/v2'
 export const HOUSE_ID = 87524
 export const SENATE_ID = 87528
@@ -104,7 +113,7 @@ async function pollHouse () {
     fetchDetails(suspects.slice(0, 6))
   } catch (e) { markFail('civicHouse', e) }
   store.commit(changed)
-  setTimeout(pollHouse, HOUSE_EVERY)
+  schedule(pollHouse, HOUSE_EVERY)
 }
 
 async function fetchDetails (suspects) {
@@ -149,7 +158,7 @@ async function pollSenate () {
     markOk('civicSenate', true, j.test_data)
   } catch (e) { markFail('civicSenate', e) }
   store.commit(changed)
-  setTimeout(pollSenate, SENATE_EVERY)
+  schedule(pollSenate, SENATE_EVERY)
 }
 
 // ----------------------------------------------------------- California ----
@@ -182,11 +191,18 @@ async function pollCalifornia () {
   }
   if (!anyOk) markFail('civicCA', new Error('No California race could be read.'))
   store.commit(changed)
-  setTimeout(pollCalifornia, CA_EVERY)
+  schedule(pollCalifornia, CA_EVERY)
 }
 
 export function start () {
   pollHouse()
   pollSenate()
   setTimeout(pollCalifornia, 2000)   // let the two overviews land first
+}
+
+/** Force every poll to run now, replacing whatever was pending. */
+export function refresh () {
+  pollHouse()
+  pollSenate()
+  pollCalifornia()
 }

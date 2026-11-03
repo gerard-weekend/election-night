@@ -45,7 +45,21 @@ if __name__ == "__main__":
     # requested all at once.
     ThreadingHTTPServer.request_queue_size = 128
     ThreadingHTTPServer.allow_reuse_address = True
-    server = ThreadingHTTPServer(("0.0.0.0", PORT), handler)
+    try:
+        server = ThreadingHTTPServer(("0.0.0.0", PORT), handler)
+    except OSError as e:
+        # Errno 48 is "address already in use" — usually an earlier copy of
+        # this server that did not shut down. A traceback is no help at 6 PM,
+        # so say what to do instead.
+        if e.errno != 48:
+            raise
+        print(f"Port {PORT} is already in use.\n", file=sys.stderr)
+        print("Most likely an earlier copy of this server is still running.", file=sys.stderr)
+        print("Find and stop it with:\n", file=sys.stderr)
+        print(f"    lsof -nP -iTCP:{PORT} -sTCP:LISTEN", file=sys.stderr)
+        print(f"    kill <PID>\n", file=sys.stderr)
+        print(f"Or serve on another port:  python3 tools/serve.py {PORT + 1}", file=sys.stderr)
+        sys.exit(1)
     server.daemon_threads = True
     # flush=True: without it Python buffers when stdout is not a terminal, and
     # you get no confirmation the server actually came up.

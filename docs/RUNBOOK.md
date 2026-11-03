@@ -105,6 +105,18 @@ and next, `1`–`3` pin a view, `0` unpin, `R` force a refresh, `F` full screen.
 **The TV is blank at startup.** Almost certainly the server. Confirm you ran
 `tools/serve.py` and not `python3 -m http.server`, then reload.
 
+**"Port 8000 is already in use."** An earlier copy of the server is still
+running. Find and stop it, then start again:
+
+```sh
+lsof -nP -iTCP:8000 -sTCP:LISTEN
+kill <PID>
+```
+
+Or just use another port — `python3 tools/serve.py 8001` — and open
+`localhost:8001` instead. Both pages must be on the **same** port or the
+control window cannot reach the TV page.
+
 **A feed goes red.** Nothing to do. Each source fails on its own and the last
 good data stays on screen; the view shows "updated N min ago" in amber rather
 than an error. If NYT fails, calls fall back to civicAPI automatically after

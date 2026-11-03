@@ -28,8 +28,12 @@ const ok = (n, c, d = '') => { c ? (pass++, console.log('  PASS  ' + n)) : (fail
 const link = (await control.textContent('#link')).trim()
 ok('control reports connected', link.startsWith('Connected'), link)
 
+// The NYT files are staggered 0/15/30s apart, so give them time to report
+// before counting rather than sampling a half-filled panel.
+await control.waitForFunction(() => document.querySelectorAll('#feeds .feed').length >= 5, { timeout: 60000 })
+  .catch(() => {})
 const feeds = await control.$$eval('#feeds .feed', els => els.map(e => e.textContent.trim()))
-ok('feed health is listed', feeds.length >= 4, JSON.stringify(feeds))
+ok('feed health is listed', feeds.length >= 5, JSON.stringify(feeds))
 
 const counts = await control.textContent('#counts')
 ok('coverage counts arrive', /435/.test(counts) && /35/.test(counts), counts.replace(/\s+/g, ' ').trim())

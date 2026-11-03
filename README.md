@@ -45,7 +45,7 @@ under `src/`.
 
 ```sh
 node tools/test-calls.mjs        # 16 cases: call precedence
-node tools/test-control.mjs      # 12 cases: control window drives the TV
+node tools/test-control.mjs      # 13 cases: control window drives the TV
 node tools/test-resilience.mjs   # 11 cases: feed outages and a network drop
 node tools/browser-check.mjs     # all three views render, console clean
 node tools/smoke.mjs             # the live feeds still parse

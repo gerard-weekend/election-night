@@ -47,6 +47,7 @@ store.subscribe(changed => rotator.update(changed))
 // can show them as "waiting" with the right labels, and so the operator window
 // knows immediately which ones have only one source behind them.
 for (const cfg of CALIFORNIA_RACES) {
+  if (cfg.existing) continue     // the House feeds own this one
   store.observe(cfg.key, {
     office: cfg.kind === 'prop' ? 'PROP' : 'CA',
     label: cfg.label, kind: cfg.kind, state: 'CA',
@@ -81,7 +82,7 @@ function snapshot () {
     counts: {
       house: store.racesBy('H').length,
       senate: store.racesBy('S').length,
-      ca: store.racesBy('CA').length + store.racesBy('PROP').length,
+      ca: CALIFORNIA_RACES.filter(c => store.getRace(c.key)).length,
     },
     singleSourced: store.all().filter(r => r.singleSourced).map(r => r.label || r.key),
   }

@@ -31,6 +31,16 @@ export const CALIFORNIA_RACES = [
   { key: 'CA-PROP-45', kind: 'prop', label: 'Prop 45', title: 'Environmental Reviews',
     civicId: 150581, nytId: 'CA-I-84444-CA-2026-11-03' },
 
+  // ---- San Francisco's U.S. House seat ----
+  // Already polled by the House feeds under this key, so it is shown here
+  // rather than fetched again: a second copy would be called twice and appear
+  // twice in the ticker. `existing` means "already in the store, just display
+  // it" — it keeps both sources behind it, so it is not single-sourced.
+  // A top-two contest between two Democrats, Chan vs Wiener, so the two rows
+  // have to be told apart by name and not by party colour.
+  { key: 'HOUSE-CA-11', kind: 'race', label: 'U.S. House CA-11', title: 'San Francisco',
+    civicId: null, nytId: null, existing: true },
+
   // ---- Oakland (NYT only — no civicAPI coverage of Alameda County) ----
   { key: 'CA-OAK-MAYOR', kind: 'race', label: 'Oakland Mayor',
     civicId: null, nytId: 'CA-G-M-oakland-2026-11-03' },

@@ -68,7 +68,7 @@ a winner — that distinction is deliberate and holds everywhere.
 | **Reload TV** | Plain reload, keeps everything saved |
 
 **Feed health** shows each of the six feeds with seconds since its last good
-read. Amber past 3 minutes, red on failure. **Coverage** should read 435 / 35 / 11.
+read. Amber past 3 minutes, red on failure. **Coverage** should read 435 / 35 / 12.
 
 **Single-sourced races** lists Oakland Mayor, Oakland EE and Oakland FF. Those
 three have no civicAPI entry at all — civicAPI's California local coverage is
@@ -144,8 +144,10 @@ stale cache" only as a last resort — it discards your manual calls too.
 
 ## 6. If you need to change something mid-evening
 
-- **Which California races show:** `config/california.js`. Feed IDs for all 11
-  are already verified; a new race needs both a `civicId` and an `nytId`.
+- **Which California races show:** `config/california.js`. Feed IDs for all 12
+  are already verified; a new race needs both a `civicId` and an `nytId`. A race
+  the House or Senate feeds already poll (as with CA-11) is added with
+  `existing: true` and no IDs, so it is not fetched or called twice.
 - **Which Senate races are in the key panel:** `config/senate.js`. The layout
   holds 8–14 comfortably.
 - **Rotation timings:** `config/views.js`.

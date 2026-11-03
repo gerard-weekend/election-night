@@ -9,6 +9,7 @@
 
 import store from '../store.js'
 import { num, partyBucket, sleep, nowMs, testUrl } from '../util.js'
+import { fetchJson } from './http.js'
 import { CALIFORNIA_RACES } from '../../config/california.js'
 import { SEAT_HOLDERS } from '../../config/senate.js'
 
@@ -26,11 +27,7 @@ export const seatId = (st, num_) =>
 
 const detailCache = new Map()
 
-async function getJson (url) {
-  const r = await fetch(url, { cache: 'no-store' })
-  if (!r.ok) throw new Error(`civicAPI answered ${r.status}.`)
-  return r.json()
-}
+const getJson = url => fetchJson(url, { label: 'civicAPI' })
 
 // One civicAPI candidate list -> our reading shape. `kind` decides whether the
 // entries are partisan candidates or a measure's Yes/No pair.

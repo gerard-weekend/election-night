@@ -95,6 +95,7 @@ export default {
       <article class="ca-card ca-race" data-template="ca.race" data-key="${r.key}"
                data-status="${statusOf(r)}">
         <div class="ca-label">${cfg.label}</div>
+        ${cfg.title ? `<div class="ca-title ca-title-race">${cfg.title}</div>` : ''}
         <div class="ca-cands">${rows}</div>
         <div class="ca-meta">
           <span class="ca-in">${r.pctIn.toFixed(0)}% expected vote in</span>

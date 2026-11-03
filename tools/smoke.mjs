@@ -42,10 +42,14 @@ const ca = store.racesBy('CA')
 console.log('\n================ RACE COUNTS ================')
 console.log(`  House   ${house.length}   (expect 435)`)
 console.log(`  Senate  ${senate.length}   (expect 35)`)
-console.log(`  CA      ${ca.length + props.length}   (expect ${CALIFORNIA_RACES.length})`)
+// Count configured races present, not office tags: CA-11 carries office 'H'
+// because the House feeds already own it.
+const caPresent = CALIFORNIA_RACES.filter(c => store.getRace(c.key))
+console.log(`  CA      ${caPresent.length}   (expect ${CALIFORNIA_RACES.length})`)
 
 console.log('\n============ TWO-SOURCE JOIN CHECK ==========')
-for (const [label, list] of [['House', house], ['Senate', senate], ['California', [...ca, ...props]]]) {
+for (const [label, list] of [['House', house], ['Senate', senate],
+  ['California', CALIFORNIA_RACES.map(c => store.getRace(c.key)).filter(Boolean)]]) {
   const both = list.filter(r => r.votesBySource.civic && r.votesBySource.nyt).length
   const civicOnly = list.filter(r => r.votesBySource.civic && !r.votesBySource.nyt).length
   const nytOnly = list.filter(r => !r.votesBySource.civic && r.votesBySource.nyt).length

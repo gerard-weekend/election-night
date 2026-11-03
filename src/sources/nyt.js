@@ -6,6 +6,7 @@
 
 import store from '../store.js'
 import { num, partyBucket, nowMs, testUrl } from '../util.js'
+import { fetchJson } from './http.js'
 import { CALIFORNIA_RACES } from '../../config/california.js'
 import { seatId } from './civic.js'
 import { SEAT_HOLDERS } from '../../config/senate.js'
@@ -20,9 +21,7 @@ const MIN_SENATE = 30
 export const partyControl = { senate: null }
 
 async function getJson (url) {
-  const r = await fetch(url, { cache: 'no-store' })
-  if (!r.ok) throw new Error(`NYT answered ${r.status}.`)
-  const j = await r.json()
+  const j = await fetchJson(url, { label: 'NYT' })
   if (!Array.isArray(j.races)) throw new Error('NYT file format changed (no races list).')
   return j
 }

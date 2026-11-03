@@ -47,10 +47,12 @@ if __name__ == "__main__":
     ThreadingHTTPServer.allow_reuse_address = True
     server = ThreadingHTTPServer(("0.0.0.0", PORT), handler)
     server.daemon_threads = True
-    print(f"Election night display serving {ROOT}")
-    print(f"  TV      http://localhost:{PORT}/")
-    print(f"  Control http://localhost:{PORT}/control.html")
-    print("Ctrl-C to stop.")
+    # flush=True: without it Python buffers when stdout is not a terminal, and
+    # you get no confirmation the server actually came up.
+    print(f"Election night display serving {ROOT}", flush=True)
+    print(f"  TV      http://localhost:{PORT}/", flush=True)
+    print(f"  Control http://localhost:{PORT}/control.html", flush=True)
+    print("Ctrl-C to stop.", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

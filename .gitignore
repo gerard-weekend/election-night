@@ -1,0 +1,6 @@
+.DS_Store
+node_modules/
+*.log
+
+# Recorded feed snapshots from the night (tools/record.mjs) — can get large
+data/replay/

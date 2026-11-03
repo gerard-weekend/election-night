@@ -14,9 +14,10 @@ import { CALIFORNIA_RACES } from '../config/california.js'
 
 import houseView from './views/house/index.js'
 import senateView from './views/senate/index.js'
+import governorsView from './views/governors/index.js'
 import californiaView from './views/california/index.js'
 
-const views = { house: houseView, senate: senateView, california: californiaView }
+const views = { house: houseView, senate: senateView, governors: governorsView, california: californiaView }
 
 // Seed the configured California races before any feed answers, so the view
 // has the right labels and the operator window knows at once which ones have
@@ -93,6 +94,7 @@ function snapshot () {
     counts: {
       house: store.racesBy('H').length,
       senate: store.racesBy('S').length,
+      governors: store.racesBy('G').length,
       ca: CALIFORNIA_RACES.filter(c => store.getRace(c.key)).length,
     },
     singleSourced: store.all().filter(r => r.singleSourced).map(r => r.label || r.key),
@@ -129,7 +131,7 @@ addEventListener('keydown', e => {
   else if (e.key === 'ArrowRight') rotator.next()
   else if (e.key === 'ArrowLeft') rotator.prev()
   else if (e.key === '0') rotator.unpin()
-  else if (['1', '2', '3'].includes(e.key)) {
+  else if (['1', '2', '3', '4'].includes(e.key)) {
     const v = VIEWS[+e.key - 1]
     if (v) rotator.pin(v.id)
   } else if (e.key === 'r' || e.key === 'R') { civic.refresh(); nyt.refresh() }

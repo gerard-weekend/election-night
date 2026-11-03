@@ -16,7 +16,7 @@ export const NYT_STALE_MS = 4 * 60e3
 // Each office has its own NYT file, so each has its own health. Deciding a
 // Senate race's precedence from the House file's health meant a working House
 // feed could suppress a civicAPI Senate call that was the only one available.
-export const NYT_FEED_FOR = { H: 'nytHouse', S: 'nytSenate', PROP: 'nytCA', CA: 'nytCA' }
+export const NYT_FEED_FOR = { H: 'nytHouse', S: 'nytSenate', G: 'nytGov', PROP: 'nytCA', CA: 'nytCA' }
 
 export const nytHealthy = (health, office) => {
   const names = office ? [NYT_FEED_FOR[office] || 'nytHouse'] : Object.keys(NYT_FEED_FOR).map(k => NYT_FEED_FOR[k])

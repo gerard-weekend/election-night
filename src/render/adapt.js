@@ -5,6 +5,7 @@
 
 import { CALIFORNIA_RACES } from '../../config/california.js'
 import { KEY_SENATE_RACES } from '../../config/senate.js'
+import { KEY_GOVERNOR_RACES, GOVERNOR_HOLDOVERS } from '../../config/governors.js'
 import { holdovers } from '../sources/civic.js'
 import { partyControl } from '../sources/nyt.js'
 
@@ -90,6 +91,40 @@ export function senateData (store) {
     // not known, so he must not be silently assigned to either side.
     independents: won.I,
     undecided: 100 - total.D - total.R - won.I,
+  }
+}
+
+// ------------------------------------------------------------- Governors ----
+
+export function governorsData (store) {
+  const races = store.racesBy('G').map(r => ({
+    state: r.state,
+    key: KEY_GOVERNOR_RACES.includes(r.key),
+    incumbentParty: r.holder,
+    status: status(r),
+    winner: r.call ? party(r.call.party) : null,
+    leader: glyphParty(r),
+    pctIn: r.pctIn,
+    candidates: ordered(r),
+  }))
+
+  const called = races.filter(r => r.status === 'called' || r.status === 'gain')
+  const won = {
+    D: called.filter(r => r.winner === 'D').length,
+    R: called.filter(r => r.winner === 'R').length,
+    I: called.filter(r => r.winner === 'I').length,
+  }
+  const flips = {
+    D: races.filter(r => r.status === 'gain' && r.winner === 'D').length,
+    R: races.filter(r => r.status === 'gain' && r.winner === 'R').length,
+  }
+  const holdover = GOVERNOR_HOLDOVERS
+  const total = { D: holdover.D + won.D, R: holdover.R + won.R }
+  return {
+    holdover, won, flips, total, races,
+    independents: won.I,
+    // 50 governorships, not 100 seats. There is no control threshold here.
+    undecided: 50 - total.D - total.R - won.I,
   }
 }
 

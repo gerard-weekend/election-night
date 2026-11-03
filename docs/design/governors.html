@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Governors</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+.tile { position: absolute; --size: 58px; }
+.tile .abbr { font-size: 22px; }
+.tile[data-status="notup"] .abbr { font-size: 17px; }
+.legend { position: absolute; left: 48px; top: 370px; width: 840px; display: flex; justify-content: space-between; }
+.legend > div { display: flex; align-items: center; gap: 14px; font-size: 20px; color: var(--ink-2); }
+.legend .gl { --size: 30px; }
+.kr-head { display: flex; justify-content: space-between; align-items: center; height: 36px; }
+.kr { display: flex; align-items: center; gap: 20px; height: 57px; border-top: 1px solid var(--rule); }
+.kr .st { width: 52px; font-size: 36px; }
+.kr-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.kr-line { display: flex; justify-content: space-between; align-items: baseline; white-space: nowrap; }
+.kr .nm { font-size: 26px; font-weight: 600; }
+.kr .nm2 { font-size: 24px; color: var(--ink-2); }
+.kr .pl { font-size: 22px; margin-left: 8px; }
+.kr .pct { font-size: 40px; margin-left: 16px; }
+.kr .pct2 { font-size: 32px; color: var(--ink-2); margin-right: 14px; }
+.kr .gain { margin-left: 14px; vertical-align: 6px; }
+.kr-in { width: 118px; text-align: right; font-size: 30px; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<main class="stage" data-view="governors">
+<header class="hdr">
+  <div class="lbl">Midterms 2026 · Live results</div>
+  <div class="ttl">Governors</div>
+</header>
+
+<!-- Totals: 14 governorships not up in 2026 (6 D, 8 R) + races won tonight -->
+<div style="position:absolute;left:48px;top:168px;display:flex;flex-direction:column;gap:6px">
+  <span class="lbl" style="color:var(--dem-ink)">Democrats</span>
+  <span class="fig" style="font-size:132px;color:var(--dem-ink)" data-field="gov.dem.total">21</span>
+  <span style="font-size:20px;color:var(--ink-2)"><span data-field="gov.dem.holdover">6</span> not up + <span data-field="gov.dem.won">15</span> won</span>
+</div>
+<div style="position:absolute;right:1032px;top:168px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;text-align:right">
+  <span class="lbl" style="color:var(--gop-ink)">Republicans</span>
+  <span class="fig" style="font-size:132px;color:var(--gop-ink)" data-field="gov.gop.total">24</span>
+  <span style="font-size:20px;color:var(--ink-2)"><span data-field="gov.gop.holdover">8</span> not up + <span data-field="gov.gop.won">16</span> won</span>
+</div>
+<div style="position:absolute;left:468px;top:192px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:12px">
+  <div class="lbl">Flips so far</div>
+  <div style="display:flex;gap:26px"><span class="fig" style="font-size:56px;color:var(--dem-ink)">D +<span data-field="gov.flips.dem">1</span></span><span class="fig" style="font-size:56px;color:var(--gop-ink)">R +<span data-field="gov.flips.gop">1</span></span></div>
+  <div style="font-size:20px;color:var(--ink-2)"><span data-field="gov.undecided">5</span> races undecided</div>
+</div>
+
+<div class="legend">
+  <div><span class="gl" data-status="none"></span>No votes</div>
+  <div><span class="gl" data-status="counting" data-party="N" style="--p:60"></span>Counting</div>
+  <div><span class="gl" data-status="called" data-party="N"></span>Called</div>
+  <div><span class="gl" data-status="gain" data-party="N"></span>Gain</div>
+  <div><span class="gl" data-status="notup" style="--hold:var(--track)"></span>Not up</div>
+</div>
+
+<!-- Tile cartogram: 11 × 8 grid, 66 px pitch, 58 px tiles -->
+<div style="position:absolute;left:107px;top:424px;width:722px;height:520px" data-field="gov.map">
+    <span class="gl tile" data-template="gov.state" data-state-code="AK" data-status="counting" data-party="R" style="left:0px;top:0px;--p:41"><span class="abbr">AK</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="ME" data-status="called" data-party="D" style="left:660px;top:0px"><span class="abbr">ME</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="WI" data-status="counting" data-party="D" style="left:330px;top:66px;--p:83"><span class="abbr">WI</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="VT" data-status="called" data-party="R" style="left:594px;top:66px"><span class="abbr">VT</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="NH" data-status="called" data-party="R" style="left:660px;top:66px"><span class="abbr">NH</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="WA" data-status="notup" data-holdover="D" style="left:0px;top:132px;--hold:var(--dem-faint)"><span class="abbr">WA</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="ID" data-status="called" data-party="R" style="left:66px;top:132px"><span class="abbr">ID</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="MT" data-status="notup" data-holdover="R" style="left:132px;top:132px;--hold:var(--gop-faint)"><span class="abbr">MT</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="ND" data-status="notup" data-holdover="R" style="left:198px;top:132px;--hold:var(--gop-faint)"><span class="abbr">ND</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="MN" data-status="called" data-party="D" style="left:264px;top:132px"><span class="abbr">MN</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="IL" data-status="called" data-party="D" style="left:330px;top:132px"><span class="abbr">IL</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="MI" data-status="counting" data-party="R" style="left:396px;top:132px;--p:87"><span class="abbr">MI</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="NY" data-status="called" data-party="D" style="left:528px;top:132px"><span class="abbr">NY</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="MA" data-status="called" data-party="D" style="left:594px;top:132px"><span class="abbr">MA</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="OR" data-status="called" data-party="D" style="left:0px;top:198px"><span class="abbr">OR</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="NV" data-status="counting" data-party="D" style="left:66px;top:198px;--p:72"><span class="abbr">NV</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="WY" data-status="called" data-party="R" style="left:132px;top:198px"><span class="abbr">WY</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="SD" data-status="called" data-party="R" style="left:198px;top:198px"><span class="abbr">SD</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="IA" data-status="called" data-party="R" style="left:264px;top:198px"><span class="abbr">IA</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="IN" data-status="notup" data-holdover="R" style="left:330px;top:198px;--hold:var(--gop-faint)"><span class="abbr">IN</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="OH" data-status="called" data-party="R" style="left:396px;top:198px"><span class="abbr">OH</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="PA" data-status="called" data-party="D" style="left:462px;top:198px"><span class="abbr">PA</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="NJ" data-status="notup" data-holdover="D" style="left:528px;top:198px;--hold:var(--dem-faint)"><span class="abbr">NJ</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="CT" data-status="called" data-party="D" style="left:594px;top:198px"><span class="abbr">CT</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="RI" data-status="called" data-party="D" style="left:660px;top:198px"><span class="abbr">RI</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="CA" data-status="called" data-party="D" style="left:0px;top:264px"><span class="abbr">CA</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="UT" data-status="notup" data-holdover="R" style="left:66px;top:264px;--hold:var(--gop-faint)"><span class="abbr">UT</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="CO" data-status="called" data-party="D" style="left:132px;top:264px"><span class="abbr">CO</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="NE" data-status="called" data-party="R" style="left:198px;top:264px"><span class="abbr">NE</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="MO" data-status="notup" data-holdover="R" style="left:264px;top:264px;--hold:var(--gop-faint)"><span class="abbr">MO</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="KY" data-status="notup" data-holdover="D" style="left:330px;top:264px;--hold:var(--dem-faint)"><span class="abbr">KY</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="WV" data-status="notup" data-holdover="R" style="left:396px;top:264px;--hold:var(--gop-faint)"><span class="abbr">WV</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="VA" data-status="notup" data-holdover="D" style="left:462px;top:264px;--hold:var(--dem-faint)"><span class="abbr">VA</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="MD" data-status="called" data-party="D" style="left:528px;top:264px"><span class="abbr">MD</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="DE" data-status="notup" data-holdover="D" style="left:594px;top:264px;--hold:var(--dem-faint)"><span class="abbr">DE</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="AZ" data-status="counting" data-party="D" style="left:66px;top:330px;--p:58"><span class="abbr">AZ</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="NM" data-status="called" data-party="D" style="left:132px;top:330px"><span class="abbr">NM</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="KS" data-status="gain" data-party="R" style="left:198px;top:330px"><span class="abbr">KS</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="AR" data-status="called" data-party="R" style="left:264px;top:330px"><span class="abbr">AR</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="TN" data-status="called" data-party="R" style="left:330px;top:330px"><span class="abbr">TN</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="NC" data-status="notup" data-holdover="D" style="left:396px;top:330px;--hold:var(--dem-faint)"><span class="abbr">NC</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="SC" data-status="called" data-party="R" style="left:462px;top:330px"><span class="abbr">SC</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="OK" data-status="called" data-party="R" style="left:198px;top:396px"><span class="abbr">OK</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="LA" data-status="notup" data-holdover="R" style="left:264px;top:396px;--hold:var(--gop-faint)"><span class="abbr">LA</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="MS" data-status="notup" data-holdover="R" style="left:330px;top:396px;--hold:var(--gop-faint)"><span class="abbr">MS</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="AL" data-status="called" data-party="R" style="left:396px;top:396px"><span class="abbr">AL</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="GA" data-status="gain" data-party="D" style="left:462px;top:396px"><span class="abbr">GA</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="HI" data-status="called" data-party="D" style="left:0px;top:462px"><span class="abbr">HI</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="TX" data-status="called" data-party="R" style="left:198px;top:462px"><span class="abbr">TX</span></span>
+    <span class="gl tile" data-template="gov.state" data-state-code="FL" data-status="called" data-party="R" style="left:528px;top:462px"><span class="abbr">FL</span></span>
+</div>
+
+<!-- Key races: up to 15 rows, alphabetical -->
+<section style="position:absolute;left:968px;top:48px;width:904px" data-field="gov.races">
+  <div class="kr-head">
+    <span class="lbl" style="color:var(--ink-2)">Key races · % expected in at right</span>
+    <div class="fresh" data-field="shell.updated"><i></i><span data-field="shell.updatedText">Updated 20 s ago</span></div>
+  </div>
+    <div class="kr" data-template="gov.race" data-race="AK">
+      <span class="gl" data-field="race.glyph" data-status="counting" data-party="R" style="--p:41"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">AK</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Rasmussen</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">49.8</span></span>
+          <span data-template="race.candidate" data-party="D"><span class="fig pct2" data-field="cand.pct">45.1</span><span class="nm2" data-field="cand.name">Kaleo</span><span class="fig pl pink" data-field="cand.party">D</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:52"><i data-party="R"></i><i data-party="D"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">41%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="AZ">
+      <span class="gl" data-field="race.glyph" data-status="counting" data-party="D" style="--p:58"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">AZ</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Montoya</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">50.6</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">48.2</span><span class="nm2" data-field="cand.name">Kessler</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:51"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">58%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="GA">
+      <span class="gl" data-field="race.glyph" data-status="gain" data-party="D" style="--p:96"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">GA</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Ellison</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">50.9</span><span class="gain" data-field="race.gain">Gain</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">48.4</span><span class="nm2" data-field="cand.name">Carrington</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:51"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">96%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="IA">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="R" style="--p:95"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">IA</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Vandermeer</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">54.7</span></span>
+          <span data-template="race.candidate" data-party="D"><span class="fig pct2" data-field="cand.pct">43.6</span><span class="nm2" data-field="cand.name">Sloane</span><span class="fig pl pink" data-field="cand.party">D</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:56"><i data-party="R"></i><i data-party="D"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">95%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="KS">
+      <span class="gl" data-field="race.glyph" data-status="gain" data-party="R" style="--p:94"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">KS</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Thornbury</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">52.3</span><span class="gain" data-field="race.gain">Gain</span></span>
+          <span data-template="race.candidate" data-party="D"><span class="fig pct2" data-field="cand.pct">46.0</span><span class="nm2" data-field="cand.name">Achebe</span><span class="fig pl pink" data-field="cand.party">D</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:53"><i data-party="R"></i><i data-party="D"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">94%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="ME">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="D" style="--p:92"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">ME</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Gagnon</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">53.4</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">44.9</span><span class="nm2" data-field="cand.name">Pratt</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:54"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">92%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="MI">
+      <span class="gl" data-field="race.glyph" data-status="counting" data-party="R" style="--p:87"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">MI</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Hadley</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">49.9</span></span>
+          <span data-template="race.candidate" data-party="D"><span class="fig pct2" data-field="cand.pct">49.2</span><span class="nm2" data-field="cand.name">Kowalczyk</span><span class="fig pl pink" data-field="cand.party">D</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:50"><i data-party="R"></i><i data-party="D"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">87%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="MN">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="D" style="--p:93"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">MN</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Sorensen</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">52.8</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">45.5</span><span class="nm2" data-field="cand.name">Lund</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:54"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">93%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="NH">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="R" style="--p:98"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">NH</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Ayers</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">52.6</span></span>
+          <span data-template="race.candidate" data-party="D"><span class="fig pct2" data-field="cand.pct">46.1</span><span class="nm2" data-field="cand.name">Beaulieu</span><span class="fig pl pink" data-field="cand.party">D</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:53"><i data-party="R"></i><i data-party="D"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">98%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="NM">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="D" style="--p:91"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">NM</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Baca</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">54.1</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">44.3</span><span class="nm2" data-field="cand.name">Romero</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:55"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">91%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="NV">
+      <span class="gl" data-field="race.glyph" data-status="counting" data-party="D" style="--p:72"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">NV</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Castillo</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">49.7</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">48.6</span><span class="nm2" data-field="cand.name">Lyle</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:51"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">72%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="NY">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="D" style="--p:89"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">NY</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Halloran</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">55.9</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">42.8</span><span class="nm2" data-field="cand.name">Petrakis</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:57"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">89%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="OH">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="R" style="--p:95"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">OH</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="R"><span class="nm" data-field="cand.name">Brandenburg</span><span class="fig pl pink" data-field="cand.party">R</span><span class="fig pct pink" data-field="cand.pct">53.5</span></span>
+          <span data-template="race.candidate" data-party="D"><span class="fig pct2" data-field="cand.pct">45.0</span><span class="nm2" data-field="cand.name">Acosta</span><span class="fig pl pink" data-field="cand.party">D</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:54"><i data-party="R"></i><i data-party="D"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">95%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="PA">
+      <span class="gl" data-field="race.glyph" data-status="called" data-party="D" style="--p:94"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">PA</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Mercer</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">56.2</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">42.6</span><span class="nm2" data-field="cand.name">Duffield</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:57"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">94%</span>
+    </div>
+    <div class="kr" data-template="gov.race" data-race="WI">
+      <span class="gl" data-field="race.glyph" data-status="counting" data-party="D" style="--p:83"><svg class="chk" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span class="fig st" data-field="race.state">WI</span>
+      <div class="kr-body">
+        <div class="kr-line">
+          <span data-template="race.candidate" data-party="D"><span class="nm" data-field="cand.name">Hagen</span><span class="fig pl pink" data-field="cand.party">D</span><span class="fig pct pink" data-field="cand.pct">50.4</span></span>
+          <span data-template="race.candidate" data-party="R"><span class="fig pct2" data-field="cand.pct">48.3</span><span class="nm2" data-field="cand.name">Pfeiffer</span><span class="fig pl pink" data-field="cand.party">R</span></span>
+        </div>
+        <div class="share" data-field="race.share" style="--a:51"><i data-party="D"></i><i data-party="R"></i></div>
+      </div>
+      <span class="fig kr-in" data-field="race.pctIn">83%</span>
+    </div>
+</section>
+
+<footer class="tk" data-field="shell.ticker">
+  <div class="tk-prog" data-field="shell.progress" style="--progress:70"></div>
+  <span class="tk-clock" data-field="shell.clock">1:18 AM ET</span>
+  <div class="tk-calls" data-field="shell.calls">
+    <span data-template="shell.call" data-party="D"><b data-field="call.race">GA Gov</b><span data-field="call.result">Dem</span> <span class="gain">Gain</span></span>
+    <span data-template="shell.call" data-party="R"><b data-field="call.race">KS Gov</b><span data-field="call.result">GOP</span> <span class="gain">Gain</span></span>
+    <span data-template="shell.call" data-party="D"><b data-field="call.race">PA Gov</b><span data-field="call.result">Dem hold</span></span>
+    <span data-template="shell.call" data-party="R"><b data-field="call.race">OH Gov</b><span data-field="call.result">GOP hold</span></span>
+  </div>
+  <div class="tk-right">
+    <span class="tk-next" data-field="shell.rotation"><span data-field="shell.view">Governors</span> · Next: <span data-field="shell.next">California</span> <span data-field="shell.nextIn">0:24</span></span>
+    <span class="tk-src">Calls: AP via NYT · Votes: civicAPI</span>
+  </div>
+</footer>
+</main>
+<script src="fit.js"></script>
+</body>
+</html>

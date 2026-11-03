@@ -12,7 +12,8 @@
 
 import { readFile, writeFile } from 'node:fs/promises'
 
-const VIEWS = ['house', 'senate', 'california']
+// Rotation order; also the DOM order of the stages.
+const VIEWS = ['house', 'senate', 'governors', 'california']
 const DIR = 'docs/design'
 
 const between = (s, start, end, from = 0) => {
@@ -20,6 +21,33 @@ const between = (s, start, end, from = 0) => {
   if (a < 0) return null
   const b = s.indexOf(end, a)
   return b < 0 ? null : { text: s.slice(a, b + end.length), start: a, end: b + end.length }
+}
+
+/**
+ * Scope one page's CSS to its own stage.
+ *
+ * Each design page carries its own <style> block, and several of them define
+ * the same class with different values — .tile is 46 px on the Senate and
+ * 58 px on Governors, .legend is a column on one and a row on the other.
+ * Concatenating them into one document let the last page win and broke the
+ * others, which put the Governors legend on top of its map. Prefixing every
+ * selector with the owning stage keeps each page's rules to itself.
+ */
+function scope (css, view) {
+  const prefix = `.stage[data-view="${view}"]`
+  return css.replace(/(^|\})([^{}@]+)\{/g, (m, close, selectors) => {
+    const scoped = selectors
+      .split(',')
+      .map(sel => {
+        const t = sel.trim()
+        if (!t || t.startsWith('@')) return sel
+        // A rule on the stage itself must not become a descendant selector.
+        if (t.startsWith('.stage')) return t
+        return `${prefix} ${t}`
+      })
+      .join(', ')
+    return `${close}${selectors.startsWith('\n') ? '\n' : ''}${scoped} {`
+  })
 }
 
 const stages = []
@@ -30,7 +58,9 @@ for (const view of VIEWS) {
   const html = await readFile(`${DIR}/${view}.html`, 'utf8')
 
   const style = between(html, '<style>', '</style>')
-  if (style) styles.push(`/* ---- ${view} ---- */\n` + style.text.replace(/<\/?style>/g, '').trim())
+  if (style) {
+    styles.push(`/* ---- ${view} ---- */\n` + scope(style.text.replace(/<\/?style>/g, '').trim(), view))
+  }
 
   const stage = between(html, '<main class="stage"', '</main>')
   if (!stage) throw new Error(`no .stage found in ${view}.html`)

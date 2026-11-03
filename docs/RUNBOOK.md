@@ -62,7 +62,8 @@ Before guests arrive:
 
 ## 2. What's on screen
 
-Rotation is House → Senate → California, 60 s each, then round again.
+Rotation is House 20 s → Senate 30 s → Governors 15 s → California 20 s,
+then round again. One full cycle is 85 seconds.
 
 The ticker along the bottom carries the ET clock, the latest calls across all
 three offices newest-first, and an honest source credit. It reads
@@ -90,7 +91,7 @@ results. It can be closed, reopened or moved between devices at any time, and
 several can be open at once.
 
 **Feed health** shows each of the six feeds with seconds since its last good
-read. Amber past 3 minutes, red on failure. **Coverage** should read 435 / 35 / 12.
+read. Amber past 3 minutes, red on failure. **Coverage** should read 435 House / 35 Senate / 36 Governors / 12 California.
 
 **Single-sourced races** lists Oakland Mayor, Oakland EE and Oakland FF. Those
 three have no civicAPI entry at all — civicAPI's California local coverage is
@@ -118,7 +119,7 @@ applied as soon as the race appears — it is not lost.
 ### Keyboard, on the TV page itself
 
 Only needed if the control window is shut: `Space` pause, `←` / `→` previous
-and next, `1`–`3` pin a view, `0` unpin, `R` force a refresh, `F` full screen.
+and next, `1`–`4` pin a view, `0` unpin, `R` force a refresh, `F` full screen.
 
 ---
 
@@ -187,8 +188,10 @@ stale cache" only as a last resort — it discards your manual calls too.
   are already verified; a new race needs both a `civicId` and an `nytId`. A race
   the House or Senate feeds already poll (as with CA-11) is added with
   `existing: true` and no IDs, so it is not fetched or called twice.
-- **Which Senate races are in the key panel:** `config/senate.js`. The layout
-  holds 8–14 comfortably.
+- **Which Senate races are in the key panel:** `config/senate.js`, in display
+  order. The panel holds up to 15.
+- **Which Governor races are in the key panel:** `config/governors.js`, in
+  display order, each with its civicAPI id.
 - **Rotation timings:** `config/views.js`.
 
 Edit, save, press "Reload TV". There is no build step.

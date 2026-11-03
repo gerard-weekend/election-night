@@ -12,6 +12,7 @@ import { num, partyBucket, sleep, nowMs, testUrl } from '../util.js'
 import { fetchJson } from './http.js'
 import { CALIFORNIA_RACES } from '../../config/california.js'
 import { SEAT_HOLDERS } from '../../config/senate.js'
+import { CIVIC_GOVERNOR_IDS, GOVERNOR_HOLDERS } from '../../config/governors.js'
 
 // Poll scheduling. Keeping the handles lets a manual refresh (the R key)
 // replace the pending poll rather than run alongside it, which would otherwise
@@ -29,6 +30,7 @@ export const SENATE_ID = 87528
 const HOUSE_EVERY = 30e3
 const SENATE_EVERY = 30e3
 const CA_EVERY = 60e3
+const GOV_EVERY = 60e3
 
 const AT_LARGE = new Set(['AK', 'DE', 'ND', 'SD', 'VT', 'WY'])
 export const seatId = (st, num_) =>
@@ -194,10 +196,36 @@ async function pollCalifornia () {
   schedule(pollCalifornia, CA_EVERY)
 }
 
+// Only the races the Governors view shows in detail. The rest of the field
+// takes its numbers from the NYT file, which arrives in a single request.
+async function pollGovernors () {
+  const changed = new Set()
+  let anyOk = false, test = false
+  for (const [st, id] of Object.entries(CIVIC_GOVERNOR_IDS)) {
+    try {
+      const j = await getJson(`${BASE}/race/${id}`)
+      const cands = toCandidates(j.candidates, 'race')
+      const key = `GOV-${st}`
+      store.observe(key, { office: 'G', state: st, holder: GOVERNOR_HOLDERS[st] || null },
+        'civic', { votes: { candidates: cands, pctIn: num(j.percent_reporting) }, call: callFrom(cands) })
+      changed.add(key)
+      anyOk = true
+      test = test || !!j.test_data
+      markOk('civicGov', true, test)
+      store.commit(new Set([key]))
+    } catch (e) { /* one race failing must not stop the rest */ }
+    await sleep(1000)
+  }
+  if (!anyOk) markFail('civicGov', new Error('No governor race could be read.'))
+  store.commit(changed)
+  schedule(pollGovernors, GOV_EVERY)
+}
+
 export function start () {
   pollHouse()
   pollSenate()
   setTimeout(pollCalifornia, 2000)   // let the two overviews land first
+  setTimeout(pollGovernors, 20000)   // staggered clear of the California pass
 }
 
 /** Force every poll to run now, replacing whatever was pending. */
@@ -205,4 +233,5 @@ export function refresh () {
   pollHouse()
   pollSenate()
   pollCalifornia()
+  pollGovernors()
 }

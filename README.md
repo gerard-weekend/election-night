@@ -1,8 +1,8 @@
 # Election night 2026
 
 A full-screen slideshow for a living-room TV on US midterm election night,
-3 November 2026. It rotates through three live views — House swingometer,
-Senate, California — and refreshes itself all evening.
+3 November 2026. It rotates through four live views — House swingometer,
+Senate, Governors, California — and refreshes itself all evening.
 
 **Start it:**
 
@@ -33,7 +33,8 @@ src/model/      one normalized Race shape, and who gets to call a race
 src/store.js    holds every race; views subscribe to it
 src/render/     adapter from the store to the design's data contract, plus
                 small helpers for filling its markup
-src/views/      house, senate, california — read from the store, never fetch
+src/views/      house, senate, governors, california — read from the store,
+                never fetch
 config/         the California race list, Senate key races, rotation timings
 tools/          server, rehearsal generator, test suites
 ```

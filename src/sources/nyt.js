@@ -10,6 +10,7 @@ import { fetchJson } from './http.js'
 import { CALIFORNIA_RACES } from '../../config/california.js'
 import { seatId } from './civic.js'
 import { SEAT_HOLDERS } from '../../config/senate.js'
+import { GOVERNOR_HOLDERS } from '../../config/governors.js'
 
 // Poll scheduling. Keeping the handles lets a manual refresh (the R key)
 // replace the pending poll rather than run alongside it, which would otherwise
@@ -26,6 +27,7 @@ const EVERY = 45e3
 // Minimum races a healthy file must yield. Below this, assume the format moved.
 const MIN_HOUSE = 400
 const MIN_SENATE = 30
+const MIN_GOVERNOR = 30
 
 export const partyControl = { senate: null }
 
@@ -137,6 +139,40 @@ async function pollSenate () {
   schedule(pollSenate, EVERY)
 }
 
+// ------------------------------------------------------------ Governors ----
+
+async function pollGovernors () {
+  const changed = new Set()
+  try {
+    const j = await getJson(testUrl('nytGov') || `${BASE}/results-governor.json`)
+    let matched = 0
+    for (const race of j.races) {
+      if (race.office_id !== 'G') continue
+      const ru = topUnit(race)
+      if (!ru || !ru.state_postal || ru.state_postal === 'US') continue
+      const id = `GOV-${ru.state_postal}`
+      matched++
+      store.observe(id, {
+        office: 'G', state: ru.state_postal, label: ru.name,
+        holder: GOVERNOR_HOLDERS[ru.state_postal] || null,
+      }, 'nyt', {
+        votes: { candidates: unitCandidates(race, ru), pctIn: num(ru.eevp) },
+        call: callOf(race),
+      })
+      const r = store.getRace(id)
+      if (r) {
+        r.rating = race.rating || race.general_rating || null
+        if (!r.holder) r.holder = GOVERNOR_HOLDERS[ru.state_postal] || null
+      }
+      changed.add(id)
+    }
+    if (matched < MIN_GOVERNOR) throw new Error(`NYT format changed (only ${matched} governor races recognised).`)
+    markOk('nytGov')
+  } catch (e) { markFail('nytGov', e) }
+  store.commit(changed)
+  schedule(pollGovernors, EVERY)
+}
+
 // ----------------------------------------------------------- California ----
 
 async function pollCalifornia () {
@@ -173,13 +209,15 @@ async function pollCalifornia () {
 export function start () {
   // Staggered so the three files do not land together.
   pollHouse()
-  setTimeout(pollSenate, 15e3)
-  setTimeout(pollCalifornia, 30e3)
+  setTimeout(pollSenate, 12e3)
+  setTimeout(pollGovernors, 24e3)
+  setTimeout(pollCalifornia, 36e3)
 }
 
 /** Force every poll to run now, replacing whatever was pending. */
 export function refresh () {
   pollHouse()
   pollSenate()
+  pollGovernors()
   pollCalifornia()
 }

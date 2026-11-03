@@ -1,10 +1,11 @@
-// The Senate races shown in the key-races panel. Defaults to the NYT tossup
-// and lean ratings as of election morning. The panel is designed to hold
-// 8-14, so this can be edited without breaking the layout.
+// The Senate races shown in the key-races panel, in display order.
 
+// Shown in this order, top to bottom — roughly most to least consequential,
+// not alphabetical. The panel holds up to 15.
 export const KEY_SENATE_RACES = [
-  'SEN-AK', 'SEN-IA', 'SEN-KS', 'SEN-ME', 'SEN-OH',
-  'SEN-TX', 'SEN-MI', 'SEN-MN', 'SEN-NH', 'SEN-NE', 'SEN-SC',
+  'SEN-MN', 'SEN-GA', 'SEN-NH', 'SEN-NC', 'SEN-MI',
+  'SEN-ME', 'SEN-OH', 'SEN-AK', 'SEN-TX', 'SEN-KS',
+  'SEN-IA', 'SEN-NE', 'SEN-SC', 'SEN-LA', 'SEN-MS',
 ]
 
 // Control thresholds. Republicans hold the chamber at 50 through the VP

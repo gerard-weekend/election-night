@@ -52,15 +52,48 @@ export function chooseVotes (race) {
 
 // Before any votes are counted every candidate sits at zero, so sorting by
 // votes alone leaves raw ballot order — which put a write-in opposite Sherrod
-// Brown and the Legal Marijuana candidate opposite Pete Ricketts. Major
-// parties rank first, then each feed's own ordering (NYT's `order`, civicAPI's
-// ballot sequence). Once real votes arrive they dominate, as they should.
+// Brown and the Legal Marijuana candidate opposite Pete Ricketts.
+//
+// NYT ranks the serious contenders 1, 2, 3 and is the best signal available,
+// so where we have it we use it; otherwise major parties rank first, then the
+// feed's own sequence. Once real votes arrive they dominate, as they should.
 const PARTY_RANK = { D: 0, R: 0, I: 1, O: 2 }
 
 export function rankCandidates (a, b) {
   return (b.votes - a.votes)
+    || ((a.rank ?? 99) - (b.rank ?? 99))
     || ((PARTY_RANK[a.party] ?? 0) - (PARTY_RANK[b.party] ?? 0))
     || ((a.order ?? 99) - (b.order ?? 99))
+}
+
+/**
+ * Map NYT's ranking onto whichever candidate list we are displaying.
+ *
+ * Assigned greedily in NYT's own order, each NYT entry claiming one candidate,
+ * because Alaska puts two Republicans named Sullivan on the ballot — the
+ * incumbent and a near-namesake. Matching on surname alone would let the
+ * decoy take the incumbent's rank and push Peltola out of the top two.
+ */
+function rankBySource (shown, nytReading) {
+  const ranks = new Map()
+  if (!nytReading || !Array.isArray(nytReading.candidates)) return ranks
+  const pool = shown.map((c, i) => ({ c, i }))
+  const nyt = [...nytReading.candidates].sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+
+  for (const n of nyt) {
+    const sn = surname(n.name)
+    if (!sn) continue
+    const sameName = pool.filter(p => surname(p.c.name) === sn)
+    if (!sameName.length) continue
+    // Prefer the one that also agrees on incumbency, then on party.
+    const pick = sameName.find(p => !!p.c.incumbent === !!n.incumbent && partyBucket(p.c.party) === partyBucket(n.party))
+      || sameName.find(p => !!p.c.incumbent === !!n.incumbent)
+      || sameName.find(p => partyBucket(p.c.party) === partyBucket(n.party))
+      || sameName[0]
+    ranks.set(pick.i, n.order ?? 99)
+    pool.splice(pool.indexOf(pick), 1)
+  }
+  return ranks
 }
 
 export function leaderOf (candidates) {
@@ -103,7 +136,8 @@ export function resolve (race) {
   const { reading, from } = chooseVotes(race)
   if (reading) {
     const total = reading.candidates.reduce((a, c) => a + num(c.votes), 0)
-    race.candidates = reading.candidates.map(c => ({
+    const ranks = rankBySource(reading.candidates, race.votesBySource.nyt)
+    race.candidates = reading.candidates.map((c, i) => ({
       id: c.id,
       name: c.name,
       party: c.party ?? partyBucket(c.party),
@@ -112,6 +146,7 @@ export function resolve (race) {
       pct: pct(num(c.votes), total),
       incumbent: !!c.incumbent,
       order: c.order,
+      rank: ranks.get(i),
     })).sort(rankCandidates)
     race.pctIn = num(reading.pctIn)
     race.votesFrom = from

@@ -34,6 +34,16 @@ for (const cfg of CALIFORNIA_RACES) {
 }
 store.commit()
 
+// The design pages ship with fictional sample results in every slot — "155
+// Dem seats called", invented candidate names. If a view failed to render,
+// those would sit on the TV looking exactly like real results. Blank every
+// data slot before anything mounts, so the worst case is an empty field
+// rather than a made-up number. Elements holding markup (the check glyphs)
+// are left alone; only leaf text slots are cleared.
+for (const el of document.querySelectorAll('[data-field]')) {
+  if (!el.firstElementChild) el.textContent = ''
+}
+
 const ticker = createTicker(store)
 const rotator = createRotator(views, store)
 rotator.onChange(s => ticker.setRotation(s))

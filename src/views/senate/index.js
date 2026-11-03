@@ -4,6 +4,7 @@
 // holdover colours already set, so this only ever touches the 35 that are.
 
 import { senateData } from '../../render/adapt.js'
+import { KEY_SENATE_RACES } from '../../../config/senate.js'
 import { capture, repeat, field, templates, setText, setAttr, setVar, setFlag, show, pct1, lastName } from '../../render/dom.js'
 
 export default {
@@ -128,8 +129,11 @@ export default {
       setVar(tile, '--p', r.pctIn)
     }
 
-    // ---- key races, alphabetical, up to 15 ----
-    const keys = d.races.filter(r => r.key).sort((a, b) => a.state.localeCompare(b.state)).slice(0, 15)
+    // ---- key races, in the order config/senate.js lists them, up to 15 ----
+    const rank = new Map(KEY_SENATE_RACES.map((k, i) => [k.replace('SEN-', ''), i]))
+    const keys = d.races.filter(r => r.key)
+      .sort((a, b) => (rank.get(a.state) ?? 99) - (rank.get(b.state) ?? 99))
+      .slice(0, 15)
     repeat(this.keyRaces, keys.length, (row, i) => this.fillKeyRace(row, keys[i]))
   },
 }

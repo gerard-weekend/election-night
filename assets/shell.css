@@ -24,8 +24,14 @@ body { margin: 0; background: #000; overflow: hidden; }
 .stage:not(.is-active) > *:not(.tk) { transform: translateX(-24px); }
 .stage { transition: opacity 500ms cubic-bezier(.2, 0, 0, 1); }
 
-/* The ticker is outside the stages and scaled to match them. */
+/* The ticker is outside the stages and scaled to match them.
+ *
+ * It also has to restate the stage's typography: tokens.css sets the UI font
+ * on .stage, and hoisting the ticker out of the stages dropped it, so the
+ * source credit fell back to the browser's default serif. */
 .tk-fixed {
+  font-family: var(--f-ui);
+  color: var(--ink);
   position: absolute; left: 50%; top: 50%;
   transform: translate(-50%, -50%) scale(var(--scale, 1));
   transform-origin: center center;

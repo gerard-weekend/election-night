@@ -73,7 +73,16 @@ export default {
     this.dots = capture(root, 'house.seat')
     this.axis = field(root, 'house.axis')
 
-    await loadSeats()
+    try {
+      await loadSeats()
+    } catch (e) {
+      // Without the district file there is no House view. Clear the sample
+      // dots rather than leave invented districts on the TV.
+      console.error('House district data failed to load:', e)
+      repeat(this.dots, 0, () => {})
+      setText(field(root, 'house.swing'), 'NO DATA')
+      return
+    }
     // Publish holders so the ticker can tag a House gain.
     for (const s of seats) {
       const r = store.getRace(s.id)
@@ -154,12 +163,15 @@ export default {
     const bw = this.binWidth()
     const dotSize = Math.min(28, bw - 5)
 
-    // Called, plus uncalled projected at the implied swing.
-    let dPred = st.dCalled, rPred = st.rCalled
+    // Called, plus uncalled projected at the implied swing. The Republican
+    // total is derived rather than counted, so the two can never disagree
+    // about how many seats exist.
+    let dPred = st.dCalled
     for (const it of st.items) {
       if (it.called) continue
-      if (it.seat.swingToFlip < implied) dPred++; else rPred++
+      if (it.seat.swingToFlip < implied) dPred++
     }
+    const rPred = seats.length - dPred
 
     setText(field(this.root, 'house.dem.called'), st.dCalled)
     setText(field(this.root, 'house.gop.called'), st.rCalled)
@@ -177,8 +189,9 @@ export default {
 
     // Bin, then stack: called at the bottom, then gains, then uncalled.
     const columns = new Map()
+    const lastBin = (2 * M) / BIN - 1
     for (const it of onAxis) {
-      const bin = Math.floor((it.seat.swingToFlip + M) / BIN)
+      const bin = Math.min(Math.floor((it.seat.swingToFlip + M) / BIN), lastBin)
       if (!columns.has(bin)) columns.set(bin, [])
       columns.get(bin).push(it)
     }

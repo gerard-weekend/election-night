@@ -34,6 +34,7 @@
   button { background:#2a3040; color:#e9edf5; border:1px solid #3a4254; border-radius:6px; padding:7px 12px; font:inherit; cursor:pointer; }
   button:hover { background:#333c50; }
   button[data-on="1"] { background:var(--warn); color:#111; border-color:var(--warn); }
+  button.gated { opacity:.5; border-style:dashed; }
   .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
   .feed { display:flex; justify-content:space-between; gap:10px; padding:5px 0; border-bottom:1px solid #242a36; font-variant-numeric:tabular-nums; }
   .feed:last-child { border-bottom:0; }
@@ -66,6 +67,7 @@
         </div>
         <div class="row" style="margin-top:10px" id="pins"></div>
         <div class="muted" id="rotstate" style="margin-top:10px"></div>
+        <div class="muted" id="rotnote" style="margin-top:4px;color:var(--warn)"></div>
       </div>
 
       <div class="panel" style="margin-top:18px">
@@ -177,7 +179,14 @@ function render () {
   $('pause').textContent = state.rotation.paused ? '▶ Resume' : '❚❚ Pause'
   $('pause').dataset.on = state.rotation.paused ? '1' : ''
   $('pins').innerHTML = state.views.map(v =>
-    `<button data-pin="${v.id}" data-on="${state.rotation.pinned === v.id ? '1' : ''}">${v.title}</button>`).join('')
+    `<button data-pin="${v.id}" data-on="${state.rotation.pinned === v.id ? '1' : ''}"` +
+    `${v.available ? '' : ' class="gated" title="Not in the rotation yet"'}>${v.title}` +
+    `${v.available ? '' : ' ·'}</button>`).join('')
+  const waiting = state.views.filter(v => !v.available)
+  $('rotnote').textContent = waiting.length
+    ? waiting.map(v => `${v.title} joins the rotation at ${v.fromET > 12 ? v.fromET - 12 : v.fromET} PM ET`).join(' · ')
+      + '. Pin it to see it sooner.'
+    : ''
   for (const b of $('pins').querySelectorAll('[data-pin]')) b.onclick = () => send('pin', b.dataset.pin)
   $('rotstate').textContent =
     `On screen: ${state.rotation.current || '—'}${state.rotation.pinned ? ' (pinned)' : ''} · ` +

@@ -10,16 +10,32 @@
 // authority; rAF only smooths the progress hairline.
 
 import { VIEWS, MIN_DURATION, DRIFT_EVERY_MS, DRIFT_MAX_PX } from '../../config/views.js'
-import { nowMs } from '../util.js'
+import { nowMs, closeMs } from '../util.js'
+
+/**
+ * Is a view in the rotation yet?
+ *
+ * Pure, and takes the clock as an argument, so the gate can be tested at any
+ * hour without a fake clock anywhere in the running system. Production always
+ * passes the real time.
+ */
+export function isAvailable (view, now = nowMs()) {
+  if (!view || view.enabled === false) return false
+  // closeMs pins the date as well as the hour, so this cannot fire a day early.
+  return view.fromET == null || now >= closeMs(view.fromET)
+}
 
 export function createRotator (views, store) {
-  const enabled = () => VIEWS.filter(v => v.enabled && views[v.id])
+  // The rotation list, which can grow during the evening as gates open.
+  const enabled = () => VIEWS.filter(v => views[v.id] && isAvailable(v))
   let index = 0, startedAt = nowMs(), paused = false, pinned = null, current = null
   const listeners = new Set()
   const stages = new Map()
 
   for (const v of VIEWS) {
     const el = document.querySelector(`.stage[data-view="${v.id}"]`)
+    // Mount everything, including views still behind a time gate, so one
+    // opening mid-evening needs no setup.
     if (el && views[v.id]) { stages.set(v.id, el); views[v.id].mount(el, store) }
   }
 
@@ -62,6 +78,13 @@ export function createRotator (views, store) {
     if (!list.length) return
     if (!current) { show(list[index].id); return }
     if (paused || pinned) { emit(); return }
+    // A gate can close a view mid-slot in principle; never linger on one that
+    // is no longer part of the rotation.
+    if (!list.some(v => v.id === current)) {
+      index = index % list.length
+      show(list[index].id)
+      return
+    }
     if (nowMs() - startedAt >= duration()) {
       // Skip past a view with no data yet, but never drop one that has data.
       let guard = list.length
@@ -104,13 +127,26 @@ export function createRotator (views, store) {
     prev: () => advance(-1),
     pause () { paused = !paused; startedAt = nowMs(); emit(); return paused },
     setPaused (v) { paused = !!v; startedAt = nowMs(); emit() },
+    // Pinning is an explicit operator action, so it overrides a time gate:
+    // you can always put California up early to check it.
     pin (id) {
-      const list = enabled()
-      const i = list.findIndex(v => v.id === id)
-      if (i < 0) return
-      pinned = id; index = i; show(id)
+      if (!stages.has(id)) return
+      const i = enabled().findIndex(v => v.id === id)
+      pinned = id
+      if (i >= 0) index = i
+      show(id)
     },
-    unpin () { pinned = null; startedAt = nowMs(); emit() },
+    unpin () {
+      pinned = null
+      startedAt = nowMs()
+      // If the view on screen is only there because it was pinned past its
+      // time gate, do not serve it a full slot — leave at once.
+      const list = enabled()
+      if (list.length && !list.some(v => v.id === current)) {
+        index = index % list.length
+        show(list[index].id)
+      } else emit()
+    },
     setDuration (id, ms) {
       const v = VIEWS.find(x => x.id === id)
       if (v) v.duration = Math.max(MIN_DURATION, ms)

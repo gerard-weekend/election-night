@@ -63,7 +63,13 @@ Before guests arrive:
 ## 2. What's on screen
 
 Rotation is House 20 s → Senate 30 s → Governors 15 s → California 20 s,
-then round again. One full cycle is 85 seconds.
+then round again.
+
+**California is held out of the rotation until 11 PM ET**, when its polls
+close. Before that the cycle is House → Senate → Governors, 65 seconds. At
+11 PM California joins on its own and the cycle becomes 85 seconds. Nothing
+to do; the control window shows a note while it is waiting, and you can pin
+California at any time to check it early.
 
 The ticker along the bottom carries the ET clock, the latest calls across all
 three offices newest-first, and an honest source credit. It reads
@@ -192,7 +198,9 @@ stale cache" only as a last resort — it discards your manual calls too.
   order. The panel holds up to 15.
 - **Which Governor races are in the key panel:** `config/governors.js`, in
   display order, each with its civicAPI id.
-- **Rotation timings:** `config/views.js`.
+- **Rotation timings:** `config/views.js`. `fromET` on a view holds it out of
+  the rotation until that hour, ET; California uses `fromET: 23`. Remove it to
+  show a view all evening.
 
 Edit, save, press "Reload TV". There is no build step.
 

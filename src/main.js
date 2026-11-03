@@ -6,7 +6,7 @@
 import store from './store.js'
 import * as civic from './sources/civic.js'
 import * as nyt from './sources/nyt.js'
-import { createRotator } from './shell/rotator.js'
+import { createRotator, isAvailable } from './shell/rotator.js'
 import { createTicker } from './shell/ticker.js'
 import { makeBus, MSG } from './shell/bus.js'
 import { VIEWS } from '../config/views.js'
@@ -84,7 +84,12 @@ function snapshot () {
   return {
     health: store.allHealth(),
     rotation: rotator.state,
-    views: VIEWS.map(v => ({ id: v.id, title: v.title, duration: v.duration, enabled: v.enabled })),
+    views: VIEWS.map(v => ({
+      id: v.id, title: v.title, duration: v.duration, enabled: v.enabled,
+      // A view can be configured on but held out of the rotation until its
+      // polls close; the control window says so rather than looking broken.
+      available: isAvailable(v), fromET: v.fromET ?? null,
+    })),
     testData: store.isTestData(),
     calls: store.latestCalls(15).map(r => ({
       key: r.key, label: r.label || r.key, name: r.call.name,

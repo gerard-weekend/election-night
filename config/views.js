@@ -4,11 +4,15 @@
 // The designer's default is 60 s each; these are the owner's timings. One
 // full cycle is 85 s.
 
+// `fromET` keeps a view out of the rotation until that hour, ET, on election
+// day. California's polls close at 11 PM ET, and before that the view is
+// nothing but zeros, so it stays out of the cycle rather than showing an empty
+// board for five hours. It joins on its own once the hour passes.
 export const VIEWS = [
   { id: 'house', title: 'House', duration: 20e3, enabled: true },
   { id: 'senate', title: 'Senate', duration: 30e3, enabled: true },
   { id: 'governors', title: 'Governors', duration: 15e3, enabled: true },
-  { id: 'california', title: 'California', duration: 20e3, enabled: true },
+  { id: 'california', title: 'California', duration: 20e3, enabled: true, fromET: 23 },
 ]
 
 // Below the shortest configured slot, so nothing is silently lengthened.

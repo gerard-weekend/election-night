@@ -10,7 +10,10 @@
   index.html. It fetches nothing: the TV page owns the data and sends a
   snapshot over a BroadcastChannel; this sends commands back.
 
-  Both pages must be served from the same origin for the channel to connect.
+  Both pages must be open in the SAME browser profile. A BroadcastChannel is
+  scoped to one profile, so launching the TV with its own --user-data-dir and
+  opening this page in your normal Chrome will NOT connect. Open this as a
+  second window in whichever Chrome is showing the TV page.
 -->
 <style>
   :root { color-scheme: dark; --ok:#3ba55d; --warn:#e3a50a; --bad:#d7262e; --dem:#1560d4; --rep:#d7262e; --ind:#7c4dbe; }
@@ -112,7 +115,10 @@ setInterval(() => bus.send(MSG.HELLO, {}), 4000)
 setInterval(() => {
   const live = Date.now() - lastSeen < 6000
   $('link').classList.toggle('disconnected', !live)
-  if (!live) $('link').textContent = 'Not connected to the TV page. Is index.html open on the same origin?'
+  if (!live) $('link').textContent =
+    'Not connected to the TV page. It must be open in the SAME Chrome profile '
+    + '(same browser instance), not just the same address — the link between '
+    + 'the two windows does not cross profiles.'
 }, 1000)
 
 $('pause').onclick = () => send('pause', !(state && state.rotation.paused))

@@ -23,9 +23,19 @@ open -na "Google Chrome" --args --kiosk --app=http://localhost:8000 \
   --user-data-dir=/tmp/election-kiosk
 ```
 
-Then open the control window on the **laptop** screen:
+Then open the control window **as a second window of that same Chrome**, and
+drag it to the laptop screen:
 
-    http://localhost:8000/control.html
+```sh
+open -na "Google Chrome" --args --user-data-dir=/tmp/election-kiosk \
+  --new-window http://localhost:8000/control.html
+```
+
+> **It must be the same Chrome profile as the TV page.** The two windows talk
+> over a BroadcastChannel, which is scoped to one browser profile. Opening
+> `control.html` in your everyday Chrome while the TV runs under
+> `--user-data-dir=/tmp/election-kiosk` will show "Not connected", even though
+> both are on `localhost:8000`.
 
 > **Do not use `python3 -m http.server`.** It is single-threaded and drops
 > connections when the browser requests the ~14 ES modules at once, so the

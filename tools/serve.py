@@ -8,8 +8,9 @@ one time in four. Caught in rehearsal on election morning.
 
     python3 tools/serve.py          # then open http://localhost:8000/
 
-Serves on all interfaces so the control window can also be opened from a phone
-on the same network if the laptop screen is in use.
+Serves on all interfaces, but note the control window must run in the same
+Chrome profile as the TV page: the two talk over a BroadcastChannel, which
+does not cross profiles or machines. A phone cannot drive it.
 """
 
 import functools

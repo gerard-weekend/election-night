@@ -18,24 +18,32 @@ python3 tools/serve.py
 # 2. stop the Mac sleeping (leave it running all evening)
 caffeinate -d
 
-# 3. optional: a kiosk window with no extensions or sign-in banners
-open -na "Google Chrome" --args --kiosk --app=http://localhost:8000 \
-  --user-data-dir=/tmp/election-kiosk
+# 3. the TV window: an app window with no tab strip or address bar
+open -na "Google Chrome" --args --app=http://localhost:8000
 ```
 
-Then open the control window **as a second window of that same Chrome**, and
-drag it to the laptop screen:
+Drag that window to the TV and press `⌘⌃F` for full screen. Then open the
+control window as an ordinary tab in the **same** Chrome and keep it on the
+laptop screen:
 
-```sh
-open -na "Google Chrome" --args --user-data-dir=/tmp/election-kiosk \
-  --new-window http://localhost:8000/control.html
-```
+    http://localhost:8000/control.html
 
-> **It must be the same Chrome profile as the TV page.** The two windows talk
-> over a BroadcastChannel, which is scoped to one browser profile. Opening
-> `control.html` in your everyday Chrome while the TV runs under
-> `--user-data-dir=/tmp/election-kiosk` will show "Not connected", even though
+> **Both pages must be in the same Chrome profile.** They talk over a
+> BroadcastChannel, which is scoped to one profile, so the control window will
+> sit on "Not connected" if the TV page is in a different one — even though
 > both are on `localhost:8000`.
+
+Two flags to avoid:
+
+- **Do not pass `--user-data-dir`.** It creates a fresh profile, so Chrome
+  boots into the profile-picker screen, and it puts the TV in a different
+  profile from the control window, which breaks the link between them.
+- **`--kiosk` is ignored when Chrome is already running**, because the command
+  hands off to the running instance and `--kiosk` only applies at startup.
+  `--app` plus `⌘⌃F` gets the same result.
+
+Since this uses your everyday profile, keep **Do Not Disturb** on so no
+notification banner lands on the TV.
 
 > **Do not use `python3 -m http.server`.** It is single-threaded and drops
 > connections when the browser requests the ~14 ES modules at once, so the

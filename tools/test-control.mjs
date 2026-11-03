@@ -49,23 +49,30 @@ const single = (await control.textContent('#single')).trim()
 ok('single-sourced races are flagged', /Oakland/.test(single), single)
 
 // ---- commands reach the TV ----
-await control.click('#pause')
-await tv.waitForTimeout(600)
-ok('pause from control pauses the TV', await tv.evaluate(() => window.rotator.state.paused))
+// Commands now travel through the server relay, so allow for its poll
+// interval rather than the old same-process timing.
+const settle = async pred => {
+  for (let i = 0; i < 20; i++) {
+    if (await tv.evaluate(pred)) return true
+    await tv.waitForTimeout(250)
+  }
+  return false
+}
 
 await control.click('#pause')
-await tv.waitForTimeout(600)
-ok('resume from control resumes the TV', !(await tv.evaluate(() => window.rotator.state.paused)))
+ok('pause from control pauses the TV', await settle(() => window.rotator.state.paused))
+
+await control.click('#pause')
+ok('resume from control resumes the TV', await settle(() => !window.rotator.state.paused))
 
 await control.click('[data-pin="california"]')
-await tv.waitForTimeout(1200)
+await settle(() => window.rotator.state.pinned === 'california')
 ok('pin from control switches the TV view',
   (await tv.evaluate(() => window.rotator.state.pinned)) === 'california',
   await tv.evaluate(() => window.rotator.state.pinned))
 
 await control.click('#unpin')
-await tv.waitForTimeout(600)
-ok('unpin clears the pin', !(await tv.evaluate(() => window.rotator.state.pinned)))
+ok('unpin clears the pin', await settle(() => !window.rotator.state.pinned))
 
 // ---- a manual call typed before the race has loaded still lands ----
 // The call is kept as intent and re-resolved on every poll, so typing it

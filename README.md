@@ -26,8 +26,8 @@ feeds — no API keys, no server code, no build step.
 
 ```
 index.html      the TV page: one 1920x1080 stage, scaled to the screen
-control.html    the operator window, on the laptop; talks to the TV over a
-                BroadcastChannel, so the feeds stay at one set of requests
+control.html    the operator page, on the laptop or a phone; talks to the TV
+                through the server, so the feeds stay at one set of requests
 src/sources/    civicAPI and NYT: fetch, retry, record health
 src/model/      one normalized Race shape, and who gets to call a race
 src/store.js    holds every race; views subscribe to it

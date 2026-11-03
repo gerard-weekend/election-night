@@ -8,15 +8,45 @@ one time in four. Caught in rehearsal on election morning.
 
     python3 tools/serve.py          # then open http://localhost:8000/
 
-Serves on all interfaces, but note the control window must run in the same
-Chrome profile as the TV page: the two talk over a BroadcastChannel, which
-does not cross profiles or machines. A phone cannot drive it.
+It also relays between the TV page and the control page, so the two no longer
+need to share a browser profile and the control page works from a phone on the
+same network. The relay holds one snapshot of state and a short queue of
+commands, both in memory: nothing is persisted and a restart simply starts
+over, which is what you want mid-evening.
+
+    GET  /api/state              latest snapshot the TV pushed
+    POST /api/state              TV pushes its snapshot
+    POST /api/command            control queues a command
+    GET  /api/commands?since=N   commands newer than N, for the TV to apply
 """
 
 import functools
+import json
 import os
+import socket
 import sys
+import threading
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+
+# The relay. One state snapshot, and a queue of commands with sequence numbers
+# so the TV can ask only for what it has not seen. Trimmed so a long evening
+# cannot grow it without bound.
+MAX_COMMANDS = 100
+RELAY = {"state": None, "seq": 0, "commands": []}
+LOCK = threading.Lock()
+
+
+def lan_ip():
+    """Best guess at this machine's address on the local network, for the
+    phone. No traffic is actually sent; it just asks the routing table."""
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except OSError:
+        return None
 
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -33,6 +63,56 @@ class Handler(SimpleHTTPRequestHandler):
         # pick up any fix immediately. The feeds set their own cache headers.
         self.send_header("Cache-Control", "no-store, must-revalidate")
         super().end_headers()
+
+    # ---------------------------------------------------------- relay ----
+
+    def _json(self, payload, status=200):
+        body = json.dumps(payload).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _read_json(self):
+        length = int(self.headers.get("Content-Length") or 0)
+        if not length:
+            return None
+        try:
+            return json.loads(self.rfile.read(length) or b"null")
+        except ValueError:
+            return None
+
+    def do_GET(self):
+        if self.path.startswith("/api/state"):
+            with LOCK:
+                return self._json({"state": RELAY["state"], "seq": RELAY["seq"]})
+        if self.path.startswith("/api/commands"):
+            since = 0
+            if "since=" in self.path:
+                try:
+                    since = int(self.path.split("since=", 1)[1].split("&", 1)[0])
+                except ValueError:
+                    since = 0
+            with LOCK:
+                pending = [c for c in RELAY["commands"] if c["seq"] > since]
+                return self._json({"seq": RELAY["seq"], "commands": pending})
+        return super().do_GET()
+
+    def do_POST(self):
+        if self.path.startswith("/api/state"):
+            body = self._read_json()
+            with LOCK:
+                RELAY["state"] = body
+            return self._json({"ok": True})
+        if self.path.startswith("/api/command"):
+            body = self._read_json()
+            with LOCK:
+                RELAY["seq"] += 1
+                RELAY["commands"].append({"seq": RELAY["seq"], "payload": body})
+                del RELAY["commands"][:-MAX_COMMANDS]
+                return self._json({"ok": True, "seq": RELAY["seq"]})
+        self.send_error(404)
 
     def log_message(self, fmt, *args):
         # Only log failures; a success line per poll would bury them.
@@ -67,6 +147,9 @@ if __name__ == "__main__":
     print(f"Election night display serving {ROOT}", flush=True)
     print(f"  TV      http://localhost:{PORT}/", flush=True)
     print(f"  Control http://localhost:{PORT}/control.html", flush=True)
+    ip = lan_ip()
+    if ip:
+        print(f"  Phone   http://{ip}:{PORT}/control.html   (same Wi-Fi)", flush=True)
     print("Ctrl-C to stop.", flush=True)
     try:
         server.serve_forever()

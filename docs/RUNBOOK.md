@@ -22,22 +22,22 @@ caffeinate -d
 open -na "Google Chrome" --args --app=http://localhost:8000
 ```
 
-Drag that window to the TV and press `⌘⌃F` for full screen. Then open the
-control window as an ordinary tab in the **same** Chrome and keep it on the
-laptop screen:
+Drag that window to the TV and press `⌘⌃F` for full screen.
 
-    http://localhost:8000/control.html
+Then open the control page. It talks to the TV **through the server**, so it
+works from any browser on any device — no need to match profiles:
 
-> **Both pages must be in the same Chrome profile.** They talk over a
-> BroadcastChannel, which is scoped to one profile, so the control window will
-> sit on "Not connected" if the TV page is in a different one — even though
-> both are on `localhost:8000`.
+    http://localhost:8000/control.html          on the laptop
 
-Two flags to avoid:
+The server prints a **Phone** address when it starts, something like
+`http://10.0.0.205:8000/control.html`. Open that on a phone on the same Wi-Fi
+and you can drive the slideshow from the sofa. The page is laid out for a
+phone screen.
+
+Two flags to avoid on the TV window:
 
 - **Do not pass `--user-data-dir`.** It creates a fresh profile, so Chrome
-  boots into the profile-picker screen, and it puts the TV in a different
-  profile from the control window, which breaks the link between them.
+  boots into the profile-picker screen for no benefit.
 - **`--kiosk` is ignored when Chrome is already running**, because the command
   hands off to the running instance and `--kiosk` only applies at startup.
   `--app` plus `⌘⌃F` gets the same result.
@@ -84,6 +84,10 @@ a winner — that distinction is deliberate and holds everywhere.
 | **Unpin** | Return to the timed rotation |
 | **Clear stale cache** | Wipes saved races *and manual calls*, then reloads the TV. Asks first |
 | **Reload TV** | Plain reload, keeps everything saved |
+
+The control page is a remote, not a second copy: only the TV page fetches
+results. It can be closed, reopened or moved between devices at any time, and
+several can be open at once.
 
 **Feed health** shows each of the six feeds with seconds since its last good
 read. Amber past 3 minutes, red on failure. **Coverage** should read 435 / 35 / 12.
@@ -149,6 +153,11 @@ AP. To take a call off, type `-` and the race key.
 
 **AP withdraws a call.** Handled: the race returns to uncalled and the event is
 flagged as a withdrawal rather than silently disappearing.
+
+**The control page says it is not receiving anything.** It reads a snapshot
+the TV page pushes to the server every couple of seconds, so either the TV
+page is shut or the server has stopped. The TV keeps running regardless; the
+control page is a convenience, not a dependency.
 
 **The whole page is wedged.** "Reload TV". Manual calls and the last good data
 are saved in the browser, so it comes back within a few seconds. Use "Clear

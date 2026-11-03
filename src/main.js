@@ -98,7 +98,8 @@ bus.on(msg => {
   if (msg.type !== MSG.COMMAND) return
   const { action, value } = msg.payload || {}
   switch (action) {
-    case 'pause': rotator.setPaused(value); break
+    // A toggle, so a stale snapshot on the control side cannot invert it.
+    case 'pause': if (value === undefined) rotator.pause(); else rotator.setPaused(value); break
     case 'next': rotator.next(); break
     case 'prev': rotator.prev(); break
     case 'pin': rotator.pin(value); break
